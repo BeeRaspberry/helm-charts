@@ -1,6 +1,6 @@
 # bee-web
 
-This repo holds Helm charts to build bee-web; Bee Web front-end.
+This repo holds umbrella Helm chart to build bee-web.
 
 ## Usage
 Refer to the chart's README.

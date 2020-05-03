@@ -1,13 +1,11 @@
-# Default values for bee-web
+# Default values for helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-bee-api:
-  image:
-    repository: "erikdeirdre/bee-api"
-    tag: "v1.1"
+replicaCount: 1
 
-<<<<<<< HEAD
 image:
-  repository: erikdeirdre/beeweb-ui
+  repository: erikdeirdre/bee-web
   pullPolicy: Always 
 
 imagePullSecrets: []
@@ -74,9 +72,3 @@ affinity: {}
 
 frontend:
   enabled: false
-=======
-beeweb-ui:
-  image:
-    repository: "erikdeirdre/beeweb-ui"
-    tag: "v1.0"
->>>>>>> 334ec0c9e820f15c8349a01b248bf84cb640b6e1
