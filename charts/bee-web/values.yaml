@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: erikdeirdre/bee-web
+  repository: erikdeirdre/beeweb-ui
   pullPolicy: Always 
 
 imagePullSecrets: []
