@@ -1,1 +1,6 @@
 # Default values for bee-web
+
+beeweb-ui:
+  env:
+    - name: API_URL
+      value: "http://localhost:8000"

@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: erikdeirdre/bee-web
+  repository: erikdeirdre/beeweb-ui
   pullPolicy: Always 
 
 imagePullSecrets: []
@@ -15,6 +15,8 @@ env:
     value: "false"
   - name: PRODUCTION
     value: "true"
+  - name: API_URL
+    value: "http://localhost:8000"
 
 nameOverride: ""
 fullnameOverride: ""
