@@ -1,5 +1,5 @@
 apiVersion: v2
-name: bee-web-ui
+name: beeweb-ui
 description: A Helm chart for for building Bee Web
 
 # A chart can be either an 'application' or a 'library' chart.
