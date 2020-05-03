@@ -1,8 +1,0 @@
-dependencies:
-- name: beeweb-ui
-  version: "0.1.1"
-  repository: https://github.com/BeeRaspberry/helm-charts/releases/
-
-- name: bee-api
-  version: "0.3.0"
-  repository: https://github.com/BeeRaspberry/helm-charts/releasesm/
