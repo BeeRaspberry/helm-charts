@@ -1,0 +1,11 @@
+# Default values for bee-web
+
+bee-api:
+  image:
+    repository: "erikdeirdre/bee-api"
+    tag: "v1.1"
+
+beeweb-ui:
+  image:
+    repository: "erikdeirdre/beeweb-ui"
+    tag: "v1.0"
