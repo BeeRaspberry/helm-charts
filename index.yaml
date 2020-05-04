@@ -1,14 +1,14 @@
 apiVersion: v1
 entries:
-  beeweb-ui:
+  bee-api:
   - apiVersion: v2
-    appVersion: v1.0
-    created: "2020-05-03T22:20:45.130044811Z"
-    description: A Helm chart for for building Bee Web
-    digest: d8cfa61bb8076d76b334a48b9734729a0a9dfaf4aab1307790dc11231b2280c8
-    name: beeweb-ui
+    appVersion: V1.0
+    created: "2020-05-04T00:16:20.578668314Z"
+    description: A Helm chart for for building bee api
+    digest: 0af7b97e2d57bc90a0a7f0c3eefc33d14fb9de4dd31d10a2c7e4afd805f8f0af
+    name: bee-api
     type: application
     urls:
-    - https://github.com/BeeRaspberry/helm-charts/releases/download/beeweb-ui-0.1.1/beeweb-ui-0.1.1.tgz
-    version: 0.1.1
-generated: "2020-05-03T22:20:45.039406274Z"
+    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-api-0.3.1/bee-api-0.3.1.tgz
+    version: 0.3.1
+generated: "2020-05-04T00:16:20.483560976Z"
