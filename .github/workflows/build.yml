@@ -22,10 +22,18 @@ jobs:
         msg: ${{ github.repository }}
         seperator: "/"
 
-    - name: Publish helm packages
+    - name: Publish Bee api helm packages
       uses: helm/chart-releaser-action@v1.0.0-rc.1
       with:
-#        charts_dir: charts/bee-api
+        charts_dir: charts/bee-api
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+
+    - name: Publish Bee Web UI helm packages
+      uses: helm/chart-releaser-action@v1.0.0-rc.1
+      with:
+        charts_dir: charts/beeweb-ui
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
