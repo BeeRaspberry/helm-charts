@@ -3,4 +3,4 @@
 beeweb-ui:
   env:
     - name: API_URL
-      value: "http://beeweb-bee-api:8000"
+      value: "http://beeweb-bee-api:80"
