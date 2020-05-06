@@ -36,6 +36,7 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
+  storageClass: manual
   accessMode: ReadWriteOnce
   size: 8Gi
   annotations: {}

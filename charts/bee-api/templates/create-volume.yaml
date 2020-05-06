@@ -6,10 +6,10 @@ metadata:
     type: local
   namespace: {{ .Release.Namespace }}
 spec:
-  storageClassName: standard
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
   capacity:
-    storage: 10Gi
+    storage: {{ .Values.persistence.size | quote }}
   accessModes:
-    - ReadWriteMany
+    - {{ .Values.persistence.accessMode | quote }}
   hostPath:
     path: "/mnt/data"

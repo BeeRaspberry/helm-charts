@@ -23,10 +23,11 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
     
-    {{- with .Values.volumes }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+        - name: "{{ .Release.Name }}-volume"
+          persistentVolumeClaim:
+            claimName: "{{ .Release.Name }}-claim"
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -37,10 +38,9 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-    {{- with .Values.volumeMounts }}
           volumeMounts:
-           {{- toYaml . | nindent 12 }}
-       {{- end }}    
+            - name: "{{ .Release.Name }}-volume"
+              mountPath: "/data"
     {{- with .Values.env }}
           env:
            {{- toYaml . | nindent 12 }}
