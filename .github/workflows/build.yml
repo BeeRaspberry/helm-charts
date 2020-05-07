@@ -22,22 +22,6 @@ jobs:
         msg: ${{ github.repository }}
         seperator: "/"
 
-    - name: Lint Helm Main Chart
-      uses: WyriHaximus/github-action-helm3@v1
-      with:
-        exec: helm lint .
-
-    - name: Lint Helm bee-api Chart
-      uses: WyriHaximus/github-action-helm3@v1
-      with:
-        exec: helm lint ./charts/bee-api
-
-
-    - name: Lint Helm bee-web Chart
-      uses: WyriHaximus/github-action-helm3@v1
-      with:
-        exec: helm lint ./charts/bee-web
-
     - name: Publish Bee api helm packages
       uses: helm/chart-releaser-action@v1.0.0-rc.1
       with:
