@@ -1,6 +1,6 @@
 # helm-charts
 
-This repo holds Helm charts to build beeraspberry infrastructure.
+This repo holds Helm charts to build Bee Web infrastructure.
 
 There's two charts:
 * `bee-api` builds out the Bee Web backend.
