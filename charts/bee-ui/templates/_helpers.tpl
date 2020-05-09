@@ -41,7 +41,7 @@ helm.sh/chart: {{ include "bee-ui.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app: {{ .Chart.name }}
+app: {{ .Chart.Name }}
 chart: {{ include "bee-ui.chart" . }}
 release: {{ .Release.Name }}
 {{- end -}}

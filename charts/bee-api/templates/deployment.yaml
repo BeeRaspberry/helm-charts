@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.name }}
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Name }}
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
@@ -24,12 +24,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
     
       volumes:
-        - name: "{{ .Chart.name }}-volume"
+        - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
-            claimName: "{{ .Chart.name }}-claim"
+            claimName: "{{ .Chart.Name }}-claim"
 
       containers:
-        - name: {{ .Chart.name }}
+        - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
@@ -39,7 +39,7 @@ spec:
               containerPort: 80
               protocol: TCP
           volumeMounts:
-            - name: "{{ .Chart.name }}-volume"
+            - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"
     {{- with .Values.env }}
           env:

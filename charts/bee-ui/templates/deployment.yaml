@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Cahrt.name }}
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Name }}
   labels:
     {{- include "bee-ui.labels" . | nindent 4 }}

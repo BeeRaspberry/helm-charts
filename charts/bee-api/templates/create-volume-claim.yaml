@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "{{ .Chart.name }}-claim"
+  name: "{{ .Chart.Name }}-claim"
   namespace: {{ .Release.Name }}
 {{- with .Values.persistence.annotations  }}
   annotations:

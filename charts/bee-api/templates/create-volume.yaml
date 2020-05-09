@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Chart.name }}-volume
+  name: {{ .Chart.Name }}-volume
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
   namespace: {{ .Release.Name }}
