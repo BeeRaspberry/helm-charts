@@ -1,4 +1,4 @@
-# Default values for bee-web
+# Default values for bee-ui
 
 beeweb-ui:
   env:

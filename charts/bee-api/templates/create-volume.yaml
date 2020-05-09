@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ .Release.Name }}-volume
+  name: {{ .Chart.name }}-volume
   labels:
-    type: local
-  namespace: {{ .Release.Namespace }}
+    {{- include "bee-api.labels" . | nindent 4 }}
+  namespace: {{ .Release.Name }}
 spec:
   storageClassName: {{ .Values.persistence.storageClass | quote }}
   capacity:

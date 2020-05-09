@@ -10,14 +10,6 @@ image:
 
 imagePullSecrets: []
 
-env:
-  - name: DEBUG
-    value: "false"
-  - name: PRODUCTION
-    value: "true"
-  - name: API_URL
-    value: "http://localhost:8000"
-
 nameOverride: ""
 fullnameOverride: ""
 
@@ -42,8 +34,12 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
-  port: 80
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
 
 ingress:
   enabled: false
@@ -74,3 +70,9 @@ affinity: {}
 
 frontend:
   enabled: false
+
+backend_api:
+  host: localhost
+  port: "80"
+# http or https
+  protocol: http

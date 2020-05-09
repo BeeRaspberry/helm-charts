@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "bee-web.name" -}}
+{{- define "bee-ui.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "bee-web.fullname" -}}
+{{- define "bee-ui.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,37 +27,49 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "bee-web.chart" -}}
+{{- define "bee-ui.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "bee-web.labels" -}}
-helm.sh/chart: {{ include "bee-web.chart" . }}
-{{ include "bee-web.selectorLabels" . }}
+{{- define "bee-ui.labels" -}}
+helm.sh/chart: {{ include "bee-ui.chart" . }}
+{{ include "bee-ui.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: {{ .Chart.name }}
+chart: {{ include "bee-ui.chart" . }}
+release: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
-{{- define "bee-web.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "bee-web.name" . }}
+{{- define "bee-ui.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "bee-ui.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "bee-web.serviceAccountName" -}}
+{{- define "bee-ui.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "bee-web.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "bee-ui.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{- define "bee-ui.backend-api" -}}
+{{- if .Values.backend_api.host -}}
+{{- printf "%s://%s:%s" .Values.backend_api.protocol .Values.backend_api.host .Values.backend_api.port -}}
+{{- else -}}
+{{/*- printf "%s://%s:%s" .Values.backend_api.protocal (include "bee-ui.fullname" .) .Values.backend_api.port -*/}}
+{{- printf "%s://%s:%s" .Values.backend_api.protocol (include "bee-ui.fullname" .) .Values.backend_api.port -}}
 {{- end -}}
 {{- end -}}

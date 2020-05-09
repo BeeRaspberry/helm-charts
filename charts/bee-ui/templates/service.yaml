@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.name }}-svc
+  name: {{ .Chart.name }}
   namespace: {{ .Release.Name }}
   labels:
-    {{- include "bee-api.labels" . | nindent 4 }}
+    {{- include "bee-ui.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   {{- with .Values.service.ports }}
@@ -12,4 +12,4 @@ spec:
   {{- toYaml . | nindent 4 }}
   {{- end }} 
   selector:
-    {{- include "bee-api.selectorLabels" . | nindent 4 }}
+    {{- include "bee-ui.selectorLabels" . | nindent 4 }}

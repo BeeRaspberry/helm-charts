@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bee-web.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ .Cahrt.name }}
+  namespace: {{ .Release.Name }}
   labels:
-    {{- include "bee-web.labels" . | nindent 4 }}
+    {{- include "bee-ui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bee-web.selectorLabels" . | nindent 6 }}
+      {{- include "bee-ui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bee-web.selectorLabels" . | nindent 8 }}
+        {{- include "bee-ui.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "bee-web.serviceAccountName" . }}
+      serviceAccountName: {{ include "bee-ui.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
@@ -33,10 +33,13 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP   
-    {{- with .Values.env }}
           env:
-           {{- toYaml . | nindent 12 }}
-       {{- end }}      
+            - name: DEBUG
+              value: "false"
+            - name: PRODUCTION
+              value: "true"
+            - name: API_URL
+              value: {{ include "bee-ui.backend-api" . }}     
           livenessProbe:
             httpGet:
               path: /

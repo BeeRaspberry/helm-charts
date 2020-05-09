@@ -2,17 +2,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "{{ .Release.Name }}-claim"
-  namespace: {{ .Release.Namespace }}
+  name: "{{ .Chart.name }}-claim"
+  namespace: {{ .Release.Name }}
 {{- with .Values.persistence.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    app: {{ template "bee-api.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "bee-api.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
