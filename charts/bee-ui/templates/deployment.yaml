@@ -33,13 +33,10 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP   
+        {{- with .Values.env }}
           env:
-            - name: DEBUG
-              value: "false"
-            - name: PRODUCTION
-              value: "true"
-            - name: API_URL
-              value: {{ include "bee-ui.backend-api" . }}     
+        {{- toYaml . | nindent 12 }}
+      {{- end }}    
           livenessProbe:
             httpGet:
               path: /

@@ -1,6 +1,6 @@
 # Default values for bee-ui
 
-beeweb-ui:
+bee-ui:
   env:
     - name: API_URL
-      value: "http://beeweb-bee-api:80"
+      value: "'http://bee-ui'"
