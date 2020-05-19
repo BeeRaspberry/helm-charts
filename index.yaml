@@ -3,12 +3,12 @@ entries:
   bee-api:
   - apiVersion: v2
     appVersion: v1.2
-    created: "2020-05-12T12:43:54.870811517Z"
+    created: "2020-05-19T22:24:47.472051623Z"
     description: A Helm chart for for building bee api
-    digest: a55e131d6ee4d4b21933d02c56cf3e0758a956968b2dbe67a62ca94dbed81707
+    digest: 6bfc513c6012acdf04e4402cee6dbe76e4ea914ea22b9e4ef22c27b7a927fad5
     name: bee-api
     type: application
     urls:
-    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-api-1.1.0/bee-api-1.1.0.tgz
-    version: 1.1.0
-generated: "2020-05-12T12:43:54.750879356Z"
+    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-api-1.0.5/bee-api-1.0.5.tgz
+    version: 1.0.5
+generated: "2020-05-19T22:24:47.359066197Z"
