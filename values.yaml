@@ -2,5 +2,7 @@
 
 bee-ui:
   env:
-    - name: API_URL
-      value: "'http://bee-ui'"
+    - name: SERVICE_NAME
+      value: "http://bee-api"
+    - name: DOMAIN_NAME
+      value: beeweb.com

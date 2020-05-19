@@ -82,5 +82,9 @@ env:
     value: "false"
   - name: PRODUCTION
     value: "true"
-  - name: API_URL
+  - name: SERVICE_NAME
     value: http://localhost
+  - name: PORT
+    value: "80"
+  - name: DOMAIN_NAME
+    value: localhost
