@@ -7,6 +7,8 @@ replicaCount: 1
 image:
   repository: beeraspberry/bee-ui
   pullPolicy: IfNotPresent
+#  repository: beeweb-ui
+#  pullPolicy: Never
 
 imagePullSecrets: []
 
