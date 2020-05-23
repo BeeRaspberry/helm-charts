@@ -62,3 +62,16 @@ The table below lists available parameters and their default values.
 | `api.securityContext` | "" | {} |
 | `api.service.type` | The service type to create for API service| ClusterIP |
 | `api.service.ports` | Service ports to associate with the service. | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
+| `api.ingress` | "" | 
+     enabled: false \
+     annotations: {} \
+     # kubernetes.io/ingress.class: nginx \
+     # kubernetes.io/tls-acme: "true" \
+     hosts: \
+       - host: map-example.local \
+         paths: [] \
+     tls: [] \
+     # - secretName: chart-example-tls \
+     # hosts: \
+     # - chart-example.local |
+| `api.nodeSelector` | | {} |
