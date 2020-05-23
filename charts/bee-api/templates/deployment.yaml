@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.api.replicaCount }}
   selector:
     matchLabels:
       {{- include "bee-api.selectorLabels" . | nindent 6 }}
@@ -15,36 +15,72 @@ spec:
       labels:
         {{- include "bee-api.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.api.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
 #      serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
     
+    {{- if .Values.api.persistence.enabled }}
       volumes:
         - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
             claimName: "{{ .Chart.Name }}-claim"
-
+    {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.api.securityContext | nindent 12 }}
+          image: "{{ .Values.api.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
+    {{- if .Values.api.persistence.enabled }}          
           volumeMounts:
             - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"
-    {{- with .Values.env }}
+    {{-end }}
+    {{- if .Values.api.database.type == "sqlite" }}
           env:
            {{- toYaml . | nindent 12 }}
-       {{- end }}      
+       {{- end }}   
+    {{- if .Values.api.database.type != "sqlite" }}
+          env:
+          - name: DATABASE_TYPE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: type
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: host
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: databaseName
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: username
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: port
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-db-secret
+                key: password
+    {{- end }}      
           livenessProbe:
             httpGet:
               path: /health
@@ -54,16 +90,16 @@ spec:
               path: /health
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.api.resources | nindent 12 }}
+      {{- with .Values.api.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.api.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.api.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

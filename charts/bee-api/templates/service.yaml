@@ -6,8 +6,8 @@ metadata:
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
-  {{- with .Values.service.ports }}
+  type: {{ .Values.api.service.type }}
+  {{- with .Values.api.service.ports }}
   ports:
   {{- toYaml . | nindent 4 }}
   {{- end }} 

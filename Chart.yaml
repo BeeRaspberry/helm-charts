@@ -28,3 +28,7 @@ dependencies:
 - name: bee-api
   version: "1.0.5"
   repository: https://github.com/BeeRaspberry/helm-charts/releases/
+
+- name: bitnami/postgresql
+  version: "11.8.0"
+  repository: https://charts.bitnami.com/bitnami  
