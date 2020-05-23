@@ -63,15 +63,22 @@ The table below lists available parameters and their default values.
 | `api.service.type` | The service type to create for API service| ClusterIP |
 | `api.service.ports` | Service ports to associate with the service. | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
 | `api.ingress` | "" | 
-     enabled: false \
-     annotations: {} \
-     # kubernetes.io/ingress.class: nginx \
-     # kubernetes.io/tls-acme: "true" \
-     hosts: \
-       - host: map-example.local \
-         paths: [] \
-     tls: [] \
-     # - secretName: chart-example-tls \
-     # hosts: \
+     enabled: false <br>
+     annotations: {} <br>
+     # kubernetes.io/ingress.class: nginx <br>
+     # kubernetes.io/tls-acme: "true" <br>
+     hosts: <br>
+       - host: map-example.local <br>
+         paths: [] <br>
+     tls: [] <br>
+     # - secretName: chart-example-tls <br>
+     # hosts: <br>
      # - chart-example.local |
 | `api.nodeSelector` | | {} |
+| `api.resources` | Resources assigned to the pod | 
+     limits: <br>
+       cpu: 0.5 <br>
+       memory: 512Mi <br>
+     requests: <br>
+       cpu: 250m <br>
+       memory: 50Mi |
