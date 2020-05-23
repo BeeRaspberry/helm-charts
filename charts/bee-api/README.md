@@ -35,7 +35,7 @@ The table below lists available parameters and their default values.
 | `api.ReplicaCount`| Number of pods to run. | 1 |
 | `api.image.repository` | The image repo to pull containers from.| beeraspberry/bee-api |
 | `api.image.pullPolicy` | When to pull the image. | IfNotPresent |
-| `api.imagePullSecrets` | "" | [] |
+| `api.imagePullSecrets` |  | [] |
 | `api.volumes.name`     | Volume name used when Sqlite is the database. | bee-api-volume |
 | `api.volumes.persistentVolumeClaim.claimName` | Claim name used in conjunction wtih volume names. | bee-api-claim |
 | `api.volumeMounts.mountPath` | Mount path used by Sqlite | /data |
