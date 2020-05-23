@@ -43,24 +43,24 @@ The table below lists available parameters and their default values.
 | `api.database.enabled` | Enable Postgres or Mysql | true |
 | `api.database.port` | Database port | 5432 |
 | `api.database.username` | Database user name | beeapi |
-| `api.database.password` | Database password | "" |
-| `api.database.host` | Database host name | "" |
+| `api.database.password` | Database password |  |
+| `api.database.host` | Database host name |  |
 | `api.database.databaseName` | Database name | beeapi |
 | `api.database.type` | Database type, mysql or postgresql | postgresql |
-| `api.env` | "" | [ {name: DATABASE_DIR, value:"/data"}] |
-| `api.nameOverride` | "" | "" |
-| `api.fullnameOverride` | "" | "" |
+| `api.env` |  | [ {name: DATABASE_DIR, value:"/data"}] |
+| `api.nameOverride` |  |  |
+| `api.fullnameOverride` |  |  |
 | `api.persistence.enabled` | Enable to create Sqlite storage | true |
 | `api.persistence.storageClass` | Storage class used by Sqlite persistence. | manual |
 | `api.persistence.accessMode` | Access mode used by Sqlite persistence | ReadWriteOnce |
 | `api.persistence.size` | Disk space to allocate for sqlite| 8Gi |
 | `api.persistence.annotations` | Annotations to associate with the volune. | {} |
-| `api.serviceAccount.create` | "" | true |
-| `api.serviceAccount.annotations` | "" | {} |
-| `api.serviceAccount.name` | "" | "" |
-| `api.podSecurityContext` | "" | {} |
-| `api.securityContext` | "" | {} |
+| `api.serviceAccount.create` |  | true |
+| `api.serviceAccount.annotations` |  | {} |
+| `api.serviceAccount.name` |  |  |
+| `api.podSecurityContext` |  | {} |
+| `api.securityContext` |  | {} |
 | `api.service.type` | The service type to create for API service| ClusterIP |
 | `api.service.ports` | Service ports to associate with the service. | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
-| `api.nodeSelector` | "" | {} |
-| `api.ingress` | "" | enabled: false |
+| `api.nodeSelector` |  | {} |
+| `api.ingress` |  | enabled: false |
