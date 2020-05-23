@@ -18,7 +18,9 @@ helm repo update
 
 2. Install the chart
 ```console
-helm install <release name> 
+helm install <release name> . -n <release namespace>
+# For example
+helm install beeweb . -n bee-namespace
 ```
 
 ## Uninstalling via Helm Repo

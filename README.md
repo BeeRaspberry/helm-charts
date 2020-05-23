@@ -5,8 +5,8 @@ This repo holds the Helm Charts for the BeeRaspberry organization.
 
 There's two sub-charts to the Repo. 
 
-- [bee-api](bee-api/README.md) provides the charts for building the Bee backend.
-- [bee-ui](bee-ui/README.md) charts the Bee front-end.
+- [bee-api](charts/bee-api/README.md) provides the charts for building the Bee backend.
+- [bee-ui](charts/bee-ui/README.md) charts the Bee front-end.
 
 ## Prerequisites
 
