@@ -1,0 +1,24 @@
+## Installing via Helm Repo
+
+1. Add Bee Repo
+```console
+helm repo add beeraspberry https://beeraspberry.github.io/helm-charts/
+helm repo update
+```
+
+2. Install the chart via Chart Repo
+```console
+helm install <release name> 
+```
+
+## Uninstalling via Helm Repo
+```console
+need instructions
+```
+
+## Configuration
+
+The table below lists available parameters and their default values.
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
