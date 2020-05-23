@@ -64,3 +64,4 @@ The table below lists available parameters and their default values.
 | `api.service.ports` | Service ports to associate with the service. | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
 | `api.nodeSelector` |  | {} |
 | `api.ingress` |  | enabled: false<br>     annotations: {}<br> # kubernetes.io/ingress.class: nginx <br># kubernetes.io/tls-acme: "true" <br>     hosts: <br>       - host: map-example.local <br>         paths: [] <br>     tls: [] <br>     # - secretName: chart-example-tls <br>     # hosts: <br>     # - chart-example.local |
+| `api.resources` | Resources assigned to the pod |      limits: <br>       cpu: 0.5 <br>       memory: 512Mi <br>     requests: <br>       cpu: 250m <br>       memory: 50Mi |
