@@ -31,38 +31,38 @@ need instructions
 The table below lists available parameters and their default values.
 
 | Parameter | Description | Default |
-| --- | --- | --- |
-| `api.ReplicaCount`| | 1 |
-| `api.image.repository` | | beeraspberry/bee-api |
-| `api.image.pullPolicy` | | IfNotPresent |
+| --------- | ----------- | ------- |
+| `api.ReplicaCount`| Number of pods to run. | 1 |
+| `api.image.repository` | The image repo to pull containers from.| beeraspberry/bee-api |
+| `api.image.pullPolicy` | When to pull the image. | IfNotPresent |
 | `api.imagePullSecrets` | | [] |
-| `api.volumes.name`     | | bee-api-volume |
-| `api.volumes.persistentVolumeClaim.claimName` |  | bee-api-claim |
-| `api.volumeMounts.mountPath` | | /data |
-| `api.volumeMounts.name` | | bee-api-volume |
-| `api.database.enabled` | | true |
-| `api.database.port` | | 5432 |
-| `api.database.username` | | beeapi |
-| `api.database.password` | | |
-| `api.database.host` | | |
-| `api.database.databaseName` | | beeapi |
-| `api.database.type` | | postgresql |
-| `api.env` | | [ {name: DATABASE_DIR, value:"/data"}] |
-| `api.nameOverride` | | "" |
-| `api.fullnameOverride` | | "" |
-| `api.persistence.enabled` | | true |
-| `api.persistence.storageClass` | | manual |
-| `api.persistence.accessMode` | | ReadWriteOnce |
-| `api.persistence.size` | | 8Gi |
-| `api.persistence.annotations` | | {} |
-| `api.serviceAccount.create` | | true |
-| `api.serviceAccount.annotations` | | {} |
-| `api.serviceAccount.name` | | "" |
-| `api.podSecurityContext` | | {} |
-| `api.securityContext` | | {} |
-| `api.service.type` | | ClusterIP |
-| `api.service.ports` | | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
-| `api.ingress` | | |
+| `api.volumes.name`     | Volume name used when Sqlite is the database. | bee-api-volume |
+| `api.volumes.persistentVolumeClaim.claimName` | Claim name used in conjunction wtih volume names. | bee-api-claim |
+| `api.volumeMounts.mountPath` | Mount path used by Sqlite | /data |
+| `api.volumeMounts.name` | Mount name used by Sqlite | bee-api-volume |
+| `api.database.enabled` | Enable Postgres or Mysql | true |
+| `api.database.port` | Database port | 5432 |
+| `api.database.username` | Database user name | beeapi |
+| `api.database.password` | Database password | "" |
+| `api.database.host` | Database host name | "" |
+| `api.database.databaseName` | Database name | beeapi |
+| `api.database.type` | Database type, mysql or postgresql | postgresql |
+| `api.env` | "" | [ {name: DATABASE_DIR, value:"/data"}] |
+| `api.nameOverride` | "" | "" |
+| `api.fullnameOverride` | "" | "" |
+| `api.persistence.enabled` | Enable to create Sqlite storage | true |
+| `api.persistence.storageClass` | Storage class used by Sqlite persistence. | manual |
+| `api.persistence.accessMode` | Access mode used by Sqlite persistence | ReadWriteOnce |
+| `api.persistence.size` | Disk space to allocate for sqlite| 8Gi |
+| `api.persistence.annotations` | Annotations to associate with the volune. | {} |
+| `api.serviceAccount.create` | "" | true |
+| `api.serviceAccount.annotations` | "" | {} |
+| `api.serviceAccount.name` | "" | "" |
+| `api.podSecurityContext` | "" | {} |
+| `api.securityContext` | "" | {} |
+| `api.service.type` | The service type to create for API service| ClusterIP |
+| `api.service.ports` | Service ports to associate with the service. | [{ name: bee-api, port: 80, protocol: TCP, targetPort: 80}] |
+| `api.ingress` | "" | 
      enabled: false
      annotations: {}
      # kubernetes.io/ingress.class: nginx
@@ -73,12 +73,12 @@ The table below lists available parameters and their default values.
      tls: []
      # - secretName: chart-example-tls
      # hosts:
-     # - chart-example.local
-| `api.resources` | | |
+     # - chart-example.local |
+| `api.resources` | Resources assigned to the pod | 
      limits:
        cpu: 0.5
        memory: 512Mi
      requests:
        cpu: 250m
-       memory: 50Mi
+       memory: 50Mi |
 | `api.nodeSelector` | | {} |
