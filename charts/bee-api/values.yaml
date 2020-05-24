@@ -1,107 +1,106 @@
-api:
-  ReplicaCount: 1
+ReplicaCount: 1
 
-  image:
-    repository: beeraspberry/bee-api
-    pullPolicy: IfNotPresent
+image:
+  repository: beeraspberry/bee-api
+  pullPolicy: IfNotPresent
 
-  imagePullSecrets: []
+imagePullSecrets: []
 
-  volumes:
-    - name: bee-api-volume
-      persistentVolumeClaim:
-        claimName: bee-api-claim
+volumes:
+  - name: bee-api-volume
+    persistentVolumeClaim:
+      claimName: bee-api-claim
 
-  volumeMounts:
-    - mountPath: "/data"
-      name: bee-api-volume
+volumeMounts:
+  - mountPath: "/data"
+    name: bee-api-volume
 
-  database:
-    enabled: true
-    port: 5432
-    username: beeapi
-    password:
-    host:
-    databaseName: beeapi
-    type: postgresql
+database:
+  enabled: true
+  port: 5432
+  username: beeapi
+  password:
+  host:
+  databaseName: beeapi
+  type: postgresql
 
-  
-  env:
-    - name: DATABASE_DIR
-      value: "/data"
 
-  nameOverride: ""
-  fullnameOverride: ""
+env:
+  - name: DATABASE_DIR
+    value: "/data"
 
-  persistence:
-    enabled: true
-  ## database data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
-    storageClass: manual
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    annotations: {}
+nameOverride: ""
+fullnameOverride: ""
 
-  serviceAccount:
-  # Specifies whether a service account should be created
-    create: true
-  # Annotations to add to the service account
-    annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-    name:
+persistence:
+  enabled: true
+## database data Persistent Volume Storage Class
+## If defined, storageClassName: <storageClass>
+## If set to "-", storageClassName: "", which disables dynamic provisioning
+## If undefined (the default) or set to null, no storageClassName spec is
+##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+##   GKE, AWS & OpenStack)
+##
+# storageClass: "-"
+  storageClass: manual
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  annotations: {}
 
-  podSecurityContext: {}
-  # fsGroup: 2000
+serviceAccount:
+# Specifies whether a service account should be created
+  create: true
+# Annotations to add to the service account
+  annotations: {}
+# The name of the service account to use.
+# If not set and create is true, a name is generated using the fullname template
+  name:
 
-  securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+podSecurityContext: {}
+# fsGroup: 2000
 
-  service:
-    type: ClusterIP
-    ports:
-    - name: bee-api
-      port: 80
-      protocol: TCP
-      targetPort: 80
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
 
-  ingress:
-    enabled: false
-    annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: map-example.local
-        paths: []
-    tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+service:
+  type: ClusterIP
+  ports:
+  - name: bee-api
+    port: 80
+    protocol: TCP
+    targetPort: 80
 
-  resources:
-    limits:
-      cpu: 0.5
-      memory: 512Mi
-    requests:
-      cpu: 250m
-      memory: 50Mi
+ingress:
+  enabled: false
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: map-example.local
+      paths: []
+  tls: []
+#  - secretName: chart-example-tls
+#    hosts:
+#      - chart-example.local
 
-  nodeSelector: {}
+resources:
+  limits:
+    cpu: 0.5
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 50Mi
 
-  tolerations: []
+nodeSelector: {}
 
-  affinity: {}
+tolerations: []
 
-  frontend:
-    enabled: false
+affinity: {}
+
+frontend:
+  enabled: false
