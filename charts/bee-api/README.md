@@ -8,7 +8,7 @@ This chart deploys the backend API for the Bee Project.
 - Kubernetes 1.12+
 - Helm 3.x.+
 
-## Installing via Helm Repo
+## Install via Helm Repo
 
 1. Add Bee Repo
 ```console
@@ -26,6 +26,21 @@ helm install beeweb . -n bee-namespace
 ## Uninstalling via Helm Repo
 ```console
 need instructions
+```
+
+## Install using Git
+
+1. Clone the Helm Chart Repo
+```console
+git clone https://https://github.com/BeeRaspberry/helm-charts.git
+```
+
+2. Install the chart
+```console
+cd charts/bee-api
+helm install <release name> . -n <release namespace>
+# For example
+helm install beeweb . -n bee-namespace
 ```
 
 ## Configuration

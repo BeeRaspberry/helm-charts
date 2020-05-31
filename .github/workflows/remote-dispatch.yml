@@ -1,0 +1,44 @@
+name: Remote Dispatch Action Responder
+ 
+on: [repository_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure Git
+      run: |
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+    - name: Get repo and owner
+      uses: jungwinter/split@v1
+      id: split
+      with:
+        msg: ${{ github.repository }}
+        seperator: "/"
+
+    - name: Event Information
+      run: |
+        echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+
+    - name: Publish Bee api helm packages
+      if: github.event.client_payload.repository == "BeeRaspberry/bee_api"
+      uses: helm/chart-releaser-action@v1.0.0-rc.2
+      with:
+        charts_dir: charts/bee-api
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+
+    - name: Publish Bee Web UI helm packages
+      if: github.event.client_payload.repository == "BeeRaspberry/bee-ui"
+      uses: helm/chart-releaser-action@v1.0.0-rc.2
+      with:
+        charts_dir: charts/bee-ui
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
