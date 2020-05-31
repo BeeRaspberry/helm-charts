@@ -58,7 +58,7 @@ jobs:
         force: true
 
     - name: Publish Bee api helm packages
-      if: github.event.client_payload.repository == "BeeRaspberry\/bee_api"
+      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
       uses: helm/chart-releaser-action@v1.0.0-rc.2
       with:
         charts_dir: charts/bee-api
@@ -67,7 +67,7 @@ jobs:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
 
     - name: Publish Bee Web UI helm packages
-      if: github.event.client_payload.repository == "BeeRaspberry\/bee-ui"
+      if: github.event.client_payload.repository == 'BeeRaspberry/bee-ui'
       uses: helm/chart-releaser-action@v1.0.0-rc.2
       with:
         charts_dir: charts/bee-ui
