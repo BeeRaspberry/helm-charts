@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 0
 
     - name: Configure Job
       run: |
@@ -29,7 +31,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: |
         DIFF=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml)
-        if [[ -z "$DIFF" ]]; then
+        if [[ ! -z "$DIFF" ]]; then
           echo ::set-env name=API_VERSION_CHANGE::1
         fi
 
@@ -37,7 +39,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: |
         DIFF=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml)
-        if [[ -z "$DIFF" ]]; then
+        if [[ ! -z "$DIFF" ]]; then
           echo ::set-env name=UI_VERSION_CHANGE::1
         fi
 
