@@ -1,5 +1,9 @@
 name: Remote Dispatch Action Responder
- 
+
+# Process is invoked by bee_api and bee-ui repo when 'VERSION' file changes.
+# This process updates the appVersion in the respective Chart.yaml file.
+# The build process should see the change, and create a new package.
+
 on: [repository_dispatch]
 
 jobs:
@@ -13,6 +17,8 @@ jobs:
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        echo ::set-env name=VERSION_CHANGE::0
+        echo ::set-env name=API_VERSION::"${{ github.event.client_payload.version }}""
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
@@ -24,21 +30,47 @@ jobs:
     - name: Event Information
       run: |
         echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+        echo "Version: '${{ env.API_VERSION }}'"
 
-    - name: Publish Bee api helm packages
+    - name: Update appVersion in charts/bee-api/Chart.yaml
       if: github.event.client_payload.repository == "BeeRaspberry\/bee_api"
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-api
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+      run: |
+        sed "s/^appVersion: .*/appVersion:${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
+        git add charts/bee-api/Chart.yaml
+        git commit -m "Updated appVersion file - bee-api"
+        echo ::set-env name=VERSION_CHANGE::1
+        cat charts/bee-api/Chart.yaml
 
-    - name: Publish Bee Web UI helm packages
-      if: github.event.client_payload.repository == "BeeRaspberry\/bee-ui"
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-ui
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+    - name: Update appVersion in charts/bee-api/Chart.yaml
+      if: github.event.client_payload.repository == "BeeRaspberry\/beeweb-ui"
+      run: |
+        sed "s/^appVersion: .*/appVersion:${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
+        git add charts/bee-ui/Chart.yaml
+        git commit -m "Updated appVersion file - bee-ui"
+        echo ::set-env name=VERSION_CHANGE::1
+        cat charts/bee-ui/Chart.yaml
+
+#    - name: Push changes to master
+#      if: env.VERSION_CHANGE == 1
+#      uses: ad-m/github-push-action@master
+#      with:
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#        force: true
+
+#    - name: Publish Bee api helm packages
+#      if: github.event.client_payload.repository == "BeeRaspberry\/bee_api"
+#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#      with:
+#        charts_dir: charts/bee-api
+#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+#      env:
+#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+
+#    - name: Publish Bee Web UI helm packages
+#      if: github.event.client_payload.repository == "BeeRaspberry\/bee-ui"
+#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#      with:
+#        charts_dir: charts/bee-ui
+#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+#      env:
+#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
