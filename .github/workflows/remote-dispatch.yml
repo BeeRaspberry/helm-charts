@@ -18,7 +18,7 @@ jobs:
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         echo ::set-env name=VERSION_CHANGE::0
-        echo ::set-env name=API_VERSION::"${{ github.event.client_payload.version }}""
+        echo ::set-env name=API_VERSION::"${{ github.event.client_payload.version }}"
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
