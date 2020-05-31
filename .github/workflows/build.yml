@@ -1,7 +1,8 @@
 name: build
 
 on: [push]
-
+# Job builds Helm packages when Chart.yml changes. Check required to keep package process from failing.
+# Package creation only occurs on the 'master' branch.
 jobs:
   build:
 
@@ -10,10 +11,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Configure Git
+    - name: Configure Job
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        echo ::set-env name=API_VERSION_CHANGE::0
+        echo ::set-env name=UI_VERSION_CHANGE::0
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
@@ -21,8 +24,25 @@ jobs:
       with:
         msg: ${{ github.repository }}
         seperator: "/"
+  
+    - name: Check Version change - charts/bee-api
+      if: github.ref == 'refs/heads/master'
+      run: |
+        DIFF=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml)
+        if [[ -z "$DIFF" ]]; then
+          echo ::set-env name=API_VERSION_CHANGE::1
+        fi
+
+    - name: Check Version change - charts/bee-ui
+      if: github.ref == 'refs/heads/master'
+      run: |
+        DIFF=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml)
+        if [[ -z "$DIFF" ]]; then
+          echo ::set-env name=UI_VERSION_CHANGE::1
+        fi
 
     - name: Publish Bee api helm packages
+      if: env.API_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master' 
       uses: helm/chart-releaser-action@v1.0.0-rc.2
       with:
         charts_dir: charts/bee-api
@@ -31,6 +51,7 @@ jobs:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
 
     - name: Publish Bee Web UI helm packages
+      if: env.UI_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master' 
       uses: helm/chart-releaser-action@v1.0.0-rc.2
       with:
         charts_dir: charts/bee-ui
