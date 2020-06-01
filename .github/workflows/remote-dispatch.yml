@@ -65,7 +65,7 @@ jobs:
         fi
 
     - name: Push changes to master
-      if: env.VERSION_CHANGE == 1
+      if: env.VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
