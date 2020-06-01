@@ -65,7 +65,7 @@ jobs:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
 # Need to update Chart.yaml with proper changes to dependancy versions as well as increment appVersion itself.
     - name: Update dependency version of bee-api
-      if: API_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      if: env.API_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
       run: |
         VERSION=$(grep appVersion: charts/bee-api/Chart.yaml | awk -F ': ' '{print $NF}')
         printf "/- name: bee-api/" >sed-command
@@ -74,7 +74,7 @@ jobs:
         sed -f sed-command Chart.yaml
 
     - name: Update dependency version of bee-ui
-      if: UI_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      if: env.UI_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
       run: |
         grep appVersion: charts/bee-ui/Chart.yaml | awk -F ': ' '{print $NF}'
         printf "/- name: bee-ui/" >sed-command
@@ -83,7 +83,7 @@ jobs:
         sed -f sed-command Chart.yaml
 
     - name: Update AppVersion of Chart.yaml
-      if: VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      if: env.VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
       run: |
         sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" Chart.yaml
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
@@ -92,7 +92,7 @@ jobs:
         git commit -m "Updated dependencies in Chart.yaml"
 
     - name: Push changes to master
-      if: env.VERSION_CHANGE == 1
+      if: env.VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
