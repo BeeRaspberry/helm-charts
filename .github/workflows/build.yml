@@ -17,6 +17,7 @@ jobs:
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        echo ::set-env name=VERSION_CHANGE::0
         echo ::set-env name=API_VERSION_CHANGE::0
         echo ::set-env name=UI_VERSION_CHANGE::0
 
@@ -32,6 +33,7 @@ jobs:
       run: |
         DIFF=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml)
         if [[ ! -z "$DIFF" ]]; then
+          echo ::set-env name=VERSION_CHANGE::1
           echo ::set-env name=API_VERSION_CHANGE::1
         fi
 
@@ -40,6 +42,7 @@ jobs:
       run: |
         DIFF=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml)
         if [[ ! -z "$DIFF" ]]; then
+          echo ::set-env name=VERSION_CHANGE::1
           echo ::set-env name=UI_VERSION_CHANGE::1
         fi
 
@@ -60,3 +63,37 @@ jobs:
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+# Need to update Chart.yaml with proper changes to dependancy versions as well as increment appVersion itself.
+    - name: Update dependency version of bee-api
+      if: API_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      run: |
+        VERSION=$(grep appVersion: charts/bee-api/Chart.yaml | awk -F ': ' '{print $NF}')
+        printf "/- name: bee-api/" >sed-command
+        printf '!b;n;c\ \ version: "' >>sed-command
+        printf "${VERSION}"\" >>sed-command
+        sed -f sed-command Chart.yaml
+
+    - name: Update dependency version of bee-ui
+      if: UI_VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      run: |
+        grep appVersion: charts/bee-ui/Chart.yaml | awk -F ': ' '{print $NF}'
+        printf "/- name: bee-ui/" >sed-command
+        printf '!b;n;c\ \ version: "' >>sed-command
+        printf "${VERSION}"\" >>sed-command
+        sed -f sed-command Chart.yaml
+
+    - name: Update AppVersion of Chart.yaml
+      if: VERSION_CHANGE == 1 && github.ref == 'refs/heads/master'
+      run: |
+        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" Chart.yaml
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        git config --local user.name ${GITHUB_ACTOR}
+        git add Chart.yaml
+        git commit -m "Updated dependencies in Chart.yaml"
+
+    - name: Push changes to master
+      if: env.VERSION_CHANGE == 1
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        force: true
