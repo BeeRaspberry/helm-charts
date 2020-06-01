@@ -12,7 +12,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
+      with:
+        fetch-depth: 0
+        
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"
@@ -39,14 +41,10 @@ jobs:
         sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
         NEW_VERSION=$(grep appVersion charts/bee-api/Chart.yaml)
 
-        echo "OLD: ${ORIG_VERSION}"
-        echo "NEW: ${NEW_VERSION}"
-        
         if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
           git add charts/bee-api/Chart.yaml
           git commit -m "Updated appVersion file - bee-api"
           echo ::set-env name=VERSION_CHANGE::1
-          cat charts/bee-api/Chart.yaml
         fi
 
     - name: Update appVersion in charts/bee-ui/Chart.yaml
@@ -55,11 +53,11 @@ jobs:
         ORIG_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
         sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
         NEW_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
+
         if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
           git add charts/bee-ui/Chart.yaml
           git commit -m "Updated appVersion file - bee-ui"
           echo ::set-env name=VERSION_CHANGE::1
-          cat charts/bee-ui/Chart.yaml
         fi
 
     - name: Push changes to master
