@@ -35,20 +35,28 @@ jobs:
     - name: Update appVersion in charts/bee-api/Chart.yaml
       if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
       run: |
+        ORIG_VERSION=$(grep appVersion charts/bee-api/Chart.yaml)
         sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
-        git add charts/bee-api/Chart.yaml
-        git commit -m "Updated appVersion file - bee-api"
-        echo ::set-env name=VERSION_CHANGE::1
-        cat charts/bee-api/Chart.yaml
+        NEW_VERSION=$(grep appVersion charts/bee-api/Chart.yaml)
+        if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
+          git add charts/bee-api/Chart.yaml
+          git commit -m "Updated appVersion file - bee-api"
+          echo ::set-env name=VERSION_CHANGE::1
+          cat charts/bee-api/Chart.yaml
+        fi
 
-    - name: Update appVersion in charts/bee-api/Chart.yaml
+    - name: Update appVersion in charts/bee-ui/Chart.yaml
       if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
       run: |
+        ORIG_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
         sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
-        git add charts/bee-ui/Chart.yaml
-        git commit -m "Updated appVersion file - bee-ui"
-        echo ::set-env name=VERSION_CHANGE::1
-        cat charts/bee-ui/Chart.yaml
+        NEW_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
+        if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
+          git add charts/bee-ui/Chart.yaml
+          git commit -m "Updated appVersion file - bee-ui"
+          echo ::set-env name=VERSION_CHANGE::1
+          cat charts/bee-ui/Chart.yaml
+        fi
 
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
