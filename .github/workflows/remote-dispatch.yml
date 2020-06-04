@@ -81,7 +81,9 @@ jobs:
           IFS='.'
           echo "look ma, I made it"
           read -r -a array <<< "$VERSION"
+          echo "Is the error the problem?"
           CNT="${array[1]}"
+          echo "Problem with the count?"
           ((CNT++))
           echo "made it here"
   #        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
