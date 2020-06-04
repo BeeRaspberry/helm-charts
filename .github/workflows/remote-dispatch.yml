@@ -80,11 +80,14 @@ jobs:
           IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
           CNT="${array[1]}"
           ((CNT++))
+          cat Chart.yaml
           sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          cat Chart.yaml
           IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
           CNT="${array[1]}"
           ((CNT++))
           sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
+          cat Chart.yaml
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --local user.name ${GITHUB_ACTOR}
           git add Chart.yaml
