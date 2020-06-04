@@ -74,14 +74,16 @@ jobs:
 
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
-    - name: Update AppVersion of Chart.yaml
+    - name: Update version and AppVersion of Chart.yaml
       if: env.VERSION_CHANGE == 1
       run: |
           IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
           CNT="${array[1]}"
           ((CNT++))
-          cat Chart.yaml
+          echo "made it here"
+          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
           sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          echo "made it past sed"
           cat Chart.yaml
           IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
           CNT="${array[1]}"
