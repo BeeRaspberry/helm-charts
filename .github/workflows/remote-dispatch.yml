@@ -6,6 +6,10 @@ name: Remote Dispatch Action Responder
 
 on: [repository_dispatch]
 
+defaults:
+  run:
+    shell: bash
+    
 jobs:
   build:
     runs-on: ubuntu-latest
