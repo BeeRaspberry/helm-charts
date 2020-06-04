@@ -9,7 +9,7 @@ on: [repository_dispatch]
 defaults:
   run:
     shell: bash
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
           VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
           IFS='.'; read -r -a array <<< "$VERSION"
           CNT="${array[1]}"
-          echo "CNT: ${CNT}"
+          echo "SHELL: ${SHELL}"
           ((CNT++))
           echo "made it here"
   #        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
