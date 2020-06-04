@@ -81,23 +81,22 @@ jobs:
           CNT="${array[1]}"
           ((CNT++))
           echo "made it here"
-          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          echo "made it past sed"
-          cat Chart.yaml
-          IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
-          CNT="${array[1]}"
-          ((CNT++))
-          sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
-          cat Chart.yaml
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --local user.name ${GITHUB_ACTOR}
-          git add Chart.yaml
-          git commit -m "Updated main Chart.yml"
+  #        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+  #        sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+  #        echo "made it past sed"
+  #        IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
+  #        CNT="${array[1]}"
+  #        ((CNT++))
+  #        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
+  #        cat Chart.yaml
+  #        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+  #        git config --local user.name ${GITHUB_ACTOR}
+  #        git add Chart.yaml
+  #        git commit -m "Updated main Chart.yml"
 
-    - name: Push changes to master
-      if: env.VERSION_CHANGE == 1
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        force: true
+ #   - name: Push changes to master
+ #     if: env.VERSION_CHANGE == 1
+ #     uses: ad-m/github-push-action@master
+ #     with:
+ #       github_token: ${{ secrets.GITHUB_TOKEN }}
+ #       force: true
