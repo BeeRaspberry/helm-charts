@@ -69,29 +69,15 @@ jobs:
 
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
-    - name: Update AppVersion of Chart.yaml
-      if: env.VERSION_CHANGE == 1
-      run: |
-          VERSION=$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
-          IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
-          CNT="${array[1]}"
-          ((CNT++))
-          echo "${array[0]}.${CNT}.0" >VERSION
-
-    - name: Update AppVersion of Chart.yaml
+    - name: Update version and AppVersion of Chart.yaml
       if: env.VERSION_CHANGE == 1
       run: |
         IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
-        CNT="${array[1]}"
-        ((CNT++))
-        cat Chart.yaml
+        CNT=$((${array[1]} + 1))
         sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-        cat Chart.yaml
         IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
-        CNT="${array[1]}"
-        ((CNT++))
+        CNT=$((${array[1]} + 1))
         sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
-        cat Chart.yaml
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git config --local user.name ${GITHUB_ACTOR}
         git add Chart.yaml
