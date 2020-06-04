@@ -49,24 +49,6 @@ jobs:
           echo ::set-env name=UI_VERSION_CHANGE::1
         fi
 
-    - name: Publish Bee api helm packages
-      if: env.API_VERSION_CHANGE == 1 
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-api
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
-
-    - name: Publish Bee Web UI helm packages
-      if: env.UI_VERSION_CHANGE == 1
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-ui
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
-
     - name: Update dependency version of bee-api
       if: env.API_VERSION_CHANGE == 1
       run: |
@@ -121,3 +103,21 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
+
+    - name: Publish Bee api helm packages
+      if: env.API_VERSION_CHANGE == 1 
+      uses: helm/chart-releaser-action@v1.0.0-rc.2
+      with:
+        charts_dir: charts/bee-api
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+
+    - name: Publish Bee Web UI helm packages
+      if: env.UI_VERSION_CHANGE == 1
+      uses: helm/chart-releaser-action@v1.0.0-rc.2
+      with:
+        charts_dir: charts/bee-ui
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}

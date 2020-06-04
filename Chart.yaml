@@ -18,7 +18,7 @@ version: 1.0.7
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: v1.4.0
+appVersion: 1.4.0
 
 dependencies:
 - name: bee-ui
@@ -29,6 +29,7 @@ dependencies:
   version: "1.0.7"
   repository: https://github.com/BeeRaspberry/helm-charts/releases/
 
-- name: bitnami/postgresql
-  version: "11.8.0"
-  repository: https://charts.bitnami.com/bitnami  
+- name: postgresql
+  version: "8.10.5"
+  repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled

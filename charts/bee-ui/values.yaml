@@ -56,7 +56,7 @@ frontend:
 backend_api:
   host: localhost
   port: "80"
-http or https
+# http or https
   protocol: http
 env:
   - name: DEBUG
