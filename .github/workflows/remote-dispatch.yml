@@ -83,13 +83,12 @@ jobs:
       run: |
           VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
           IFS='.'; read -r -a array <<< "$VERSION"
-          CNT="${array[1]}"
-          echo "SHELL: ${SHELL}"
-          ((CNT++))
+          CNT=$((${array[1]} + 1))
           echo "made it here"
-  #        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-  #        sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-  #        echo "made it past sed"
+          echo "CNT: ${CNT}"
+          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          echo "made it past sed"
   #        IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
   #        CNT="${array[1]}"
   #        ((CNT++))
