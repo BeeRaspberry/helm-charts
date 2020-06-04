@@ -1,5 +1,8 @@
 # BeeRaspberry Helm Chart Repo
 
+![Remote Dispatch Action Responder](https://github.com/BeeRaspberry/helm-charts/workflows/Remote%20Dispatch%20Action%20Responder/badge.svg)
+![build](https://github.com/BeeRaspberry/helm-charts/workflows/build/badge.svg)
+
 ## Introduction
 This repo holds the Helm Charts for the BeeRaspberry organization.
 

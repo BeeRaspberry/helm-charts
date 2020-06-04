@@ -1,5 +1,5 @@
 apiVersion: v2
-name: bee-ui
+name: bee-web
 description: A Helm chart for for building Bee Web
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -18,7 +18,7 @@ version: 1.0.7
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: v1.4
+appVersion: v1.4.0
 
 dependencies:
 - name: bee-ui
