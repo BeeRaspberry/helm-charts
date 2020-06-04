@@ -77,6 +77,8 @@ jobs:
     - name: Update version and AppVersion of Chart.yaml
       if: env.VERSION_CHANGE == 1
       run: |
+          echo "starting logic"
+          grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}'
           IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
           CNT="${array[1]}"
           ((CNT++))
