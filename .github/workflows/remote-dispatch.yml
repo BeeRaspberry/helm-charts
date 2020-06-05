@@ -1,14 +1,9 @@
 name: Remote Dispatch Action Responder
 
 # Process is invoked by bee_api and bee-ui repo when 'VERSION' file changes.
-# This process updates the appVersion in the respective Chart.yaml file.
-# The build process should see the change, and create a new package.
+# This process updates the appVersion and version in the respective Chart.yaml file.
 
 on: [repository_dispatch]
-
-defaults:
-  run:
-    shell: bash
 
 jobs:
   build:
@@ -38,6 +33,45 @@ jobs:
         echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
         echo "Version: '${{ env.API_VERSION }}'"
 
+#        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+#        git config --local user.name ${GITHUB_ACTOR}
+    - name: Update version and appVersion in charts/bee-api/Chart.yaml
+      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
+      run: |
+        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
+        sed -i "s/^version: .*/version: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
+
+        git add charts/bee-api/Chart.yaml
+        git commit -m "Updated version and appVersion file - bee-api"
+        echo ::set-env name=VERSION_CHANGE::1
+
+    - name: Update version and appVersion in charts/bee-ui/Chart.yaml
+      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
+      run: |
+        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
+        sed -i "s/^version: .*/version: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
+
+        git add charts/bee-ui/Chart.yaml
+        git commit -m "Updated version and appVersion file - bee-ui"
+        echo ::set-env name=VERSION_CHANGE::1
+
+# Assume since the developer didn't change the version then this is a minor change.
+# Increment by one, and set patch to 0.
+    - name: Update version and AppVersion of Chart.yaml
+      if: env.VERSION_CHANGE == 1
+      run: |
+          VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
+          IFS='.'; read -r -a array <<< "$VERSION"
+          CNT=$((${array[1]} + 1))
+          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+          IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
+          CNT=$((${array[1]} + 1))
+          sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
+
+          git add Chart.yaml
+          git commit -m "Updated main Chart.yml"
+
     - name: Publish Bee api helm packages
       if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
       uses: helm/chart-releaser-action@v1.0.0-rc.2
@@ -55,63 +89,6 @@ jobs:
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
-
-    - name: Update appVersion in charts/bee-api/Chart.yaml
-      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
-      run: |
-        ORIG_VERSION=$(grep appVersion charts/bee-api/Chart.yaml)
-        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
-        NEW_VERSION=$(grep appVersion charts/bee-api/Chart.yaml)
-
-        if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
-          printf "/- name: bee-api/" >sed-command
-          printf '!b;n;c\ \ version: "' >>sed-command
-          printf "${{ env.API_VERSION }}"\" >>sed-command
-          sed -f sed-command Chart.yaml
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --local user.name ${GITHUB_ACTOR}
-          git add charts/bee-api/Chart.yaml
-          git commit -m "Updated appVersion file - bee-api"
-          echo ::set-env name=VERSION_CHANGE::1
-        fi
-
-    - name: Update appVersion in charts/bee-ui/Chart.yaml
-      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
-      run: |
-        ORIG_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
-        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
-        NEW_VERSION=$(grep appVersion charts/bee-ui/Chart.yaml)
-
-        if [[ "$ORIG_VERSION" != "$NEW_VERSION" ]]; then
-          printf "/- name: bee-ui/" >sed-command
-          printf '!b;n;c\ \ version: "' >>sed-command
-          printf "${{ env.API_VERSION }}"\" >>sed-command
-          sed -f sed-command Chart.yaml
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --local user.name ${GITHUB_ACTOR}
-          git add charts/bee-ui/Chart.yaml
-          git commit -m "Updated appVersion file - bee-ui"
-          echo ::set-env name=VERSION_CHANGE::1
-        fi
-
-# Assume since the developer didn't change the version then this is a minor change.
-# Increment by one, and set patch to 0.
-    - name: Update version and AppVersion of Chart.yaml
-      if: env.VERSION_CHANGE == 1
-      run: |
-          VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
-          IFS='.'; read -r -a array <<< "$VERSION"
-          CNT=$((${array[1]} + 1))
-          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
-          CNT=$((${array[1]} + 1))
-          sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --local user.name ${GITHUB_ACTOR}
-          echo "made it this far"
-          git add Chart.yaml
-          git commit -m "Updated main Chart.yml"
 
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
