@@ -72,27 +72,38 @@ jobs:
           git add Chart.yaml
           git commit -m "Updated main Chart.yml"
 
-    - name: Publish Bee api helm packages
-      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-api
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
-
-    - name: Publish Bee Web UI helm packages
-      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-ui
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
-
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
+
+    - name: Publish Bee api helm packages
+      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
+      uses: J12934/helm-gh-pages-action@master
+      with:
+        access-token: ${{ secrets.ACCESS_TOKEN }}
+        deploy-branch: gh-pages
+        charts-folder: charts/bee-api
+#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#      with:
+#        charts_dir: charts/bee-api
+#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+#      env:
+#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+
+    - name: Publish Bee Web UI helm packages
+      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
+      uses: J12934/helm-gh-pages-action@master
+      with:
+        access-token: ${{ secrets.ACCESS_TOKEN }}
+        deploy-branch: gh-pages
+        charts-folder: charts/bee-ui
+
+#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#      with:
+#        charts_dir: charts/bee-ui
+#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+#      env:
+#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}

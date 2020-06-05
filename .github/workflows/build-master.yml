@@ -44,7 +44,6 @@ jobs:
       run: |
         DIFF=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml)
         if [[ ! -z "$DIFF" ]]; then
-          cat charts/bee-ui/Chart.yaml
           echo ::set-env name=VERSION_CHANGE::1
           echo ::set-env name=UI_VERSION_CHANGE::1
         fi
