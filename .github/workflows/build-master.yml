@@ -100,7 +100,7 @@ jobs:
       if: env.VERSION_CHANGE == 1 
       uses: helm/chart-releaser-action@master
       with:
-        charts_dir: .
+        charts_dir: /
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
