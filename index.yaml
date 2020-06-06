@@ -21,4 +21,20 @@ entries:
     urls:
     - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-api-1.6.0/bee-api-1.6.0.tgz
     version: 1.6.0
+  bee-ui:
+  - apiVersion: v2
+    appVersion: 1.11.0
+    created: "2020-06-06T02:35:14.667553035Z"
+    description: Bee Web Frontend
+    digest: dd5da81eace08ec5f3e83812d4c63215a065970c366a4df71e340ce920be953a
+    home: https://github.com/BeeRaspberry/helm-charts
+    maintainers:
+    - name: Peter White
+    name: bee-ui
+    sources:
+    - https://github.com/BeeRaspberry/beeweb-ui
+    type: application
+    urls:
+    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-ui-1.11.0/bee-ui-1.11.0.tgz
+    version: 1.11.0
 generated: "2020-06-06T00:19:36.579111937Z"
