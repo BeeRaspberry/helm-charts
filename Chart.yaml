@@ -10,14 +10,9 @@ appVersion: 1.7.0
 
 dependencies:
 - name: bee-ui
-  version: "1.0.7"
+  version: 1.0.7
   repository: https://github.com/BeeRaspberry/helm-charts/releases/
 
 - name: bee-api
-  version: "1.0.7"
+  version: 1.0.7
   repository: https://github.com/BeeRaspberry/helm-charts/releases/
-
-- name: postgresql
-  version: "8.10.5"
-  repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.enabled

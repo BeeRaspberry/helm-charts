@@ -33,8 +33,6 @@ jobs:
         echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
         echo "Version: '${{ env.API_VERSION }}'"
 
-#        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-#        git config --local user.name ${GITHUB_ACTOR}
     - name: Update version and appVersion in charts/bee-api/Chart.yaml
       if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
       run: |
@@ -60,17 +58,17 @@ jobs:
     - name: Update version and AppVersion of Chart.yaml
       if: env.VERSION_CHANGE == 1
       run: |
-          VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
-          IFS='.'; read -r -a array <<< "$VERSION"
-          CNT=$((${array[1]} + 1))
-          sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
-          IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
-          CNT=$((${array[1]} + 1))
-          sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
+        VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
+        IFS='.'; read -r -a array <<< "$VERSION"
+        CNT=$((${array[1]} + 1))
+        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+        sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" Chart.yaml
+        IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
+        CNT=$((${array[1]} + 1))
+        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
 
-          git add Chart.yaml
-          git commit -m "Updated main Chart.yml"
+        git add Chart.yaml
+        git commit -m "Updated main Chart.yml"
 
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
@@ -79,29 +77,17 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
 
-    - name: Publish Bee api helm packages
-      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
-      uses: J12934/helm-gh-pages-action@master
+    - name: Publish Bee Web helm packages
+      uses: helm/chart-releaser-action@master
       with:
-        access-token: ${{ secrets.ACCESS_TOKEN }}
-        deploy-branch: gh-pages
-        charts-folder: charts/bee-api
-#      uses: helm/chart-releaser-action@v1.0.0-rc.2
-#      with:
-#        charts_dir: charts/bee-api
+        charts_dir: .
 #        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-#      env:
-#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+      env:
+        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
 
-    - name: Publish Bee Web UI helm packages
-      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
-      uses: J12934/helm-gh-pages-action@master
-      with:
-        access-token: ${{ secrets.ACCESS_TOKEN }}
-        deploy-branch: gh-pages
-        charts-folder: charts/bee-ui
-
-#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#    - name: Publish Bee Web UI helm packages
+#      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
+#      uses: helm/chart-releaser-action@master
 #      with:
 #        charts_dir: charts/bee-ui
 #        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
