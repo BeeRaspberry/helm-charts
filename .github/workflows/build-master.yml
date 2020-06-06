@@ -82,19 +82,19 @@ jobs:
         git add Chart.yaml
         git commit -m "Updated dependencies in Chart.yaml"
 
-    - name: Check Version change - Chart.yaml
-      run: |
-        DIFF=$(git diff HEAD^ HEAD Chart.yaml)
-        if [[ ! -z "$DIFF" ]]; then
-          echo ::set-env name=VERSION_CHANGE::1
-        fi
-
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
+
+    - name: Check Version change - Chart.yaml
+      run: |
+        DIFF=$(git diff HEAD^ HEAD Chart.yaml)
+        if [[ ! -z "$DIFF" ]]; then
+          echo ::set-env name=VERSION_CHANGE::1
+        fi
 
     - name: Publish Bee api helm packages
       if: env.VERSION_CHANGE == 1 
