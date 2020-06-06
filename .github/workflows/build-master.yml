@@ -53,8 +53,8 @@ jobs:
       run: |
         VERSION=$(grep appVersion: charts/bee-api/Chart.yaml | awk -F ': ' '{print $NF}')
         printf "/- name: bee-api/" >sed-command
-        printf '!b;n;c\ \ version: "' >>sed-command
-        printf "${VERSION}"\" >>sed-command
+        printf '!b;n;c\ \ version: ' >>sed-command
+        printf "${VERSION}" >>sed-command
         sed -f sed-command Chart.yaml
 
     - name: Update dependency version of bee-ui
@@ -62,8 +62,8 @@ jobs:
       run: |
         grep appVersion: charts/bee-ui/Chart.yaml | awk -F ': ' '{print $NF}'
         printf "/- name: bee-ui/" >sed-command
-        printf '!b;n;c\ \ version: "' >>sed-command
-        printf "${VERSION}"\" >>sed-command
+        printf '!b;n;c\ \ version: ' >>sed-command
+        printf "${VERSION}" >>sed-command
         sed -f sed-command Chart.yaml
 
 # Assume since the developer didn't change the version then this is a minor change.
@@ -90,19 +90,19 @@ jobs:
         force: true
 
     - name: Publish Bee api helm packages
-      if: env.API_VERSION_CHANGE == 1 
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
+      if: env.VERSION_CHANGE == 1 
+      uses: helm/chart-releaser-action@master
       with:
-        charts_dir: charts/bee-api
+        charts_dir: .
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
 
-    - name: Publish Bee Web UI helm packages
-      if: env.UI_VERSION_CHANGE == 1
-      uses: helm/chart-releaser-action@v1.0.0-rc.2
-      with:
-        charts_dir: charts/bee-ui
-        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
-      env:
-        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
+#    - name: Publish Bee Web UI helm packages
+#      if: env.UI_VERSION_CHANGE == 1
+#      uses: helm/chart-releaser-action@v1.0.0-rc.2
+#      with:
+#        charts_dir: charts/bee-ui
+#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+#      env:
+#        CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
