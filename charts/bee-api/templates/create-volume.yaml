@@ -1,17 +1,17 @@
-{{- if .Values.api.persistence.enabled }}
+{{- if .Values.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: {{ .Chart.Name }}-volume
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
-  storageClassName: {{ .Values.api.persistence.storageClass | quote }}
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
   capacity:
-    storage: {{ .Values.api.persistence.size | quote }}
+    storage: {{ .Values.persistence.size | quote }}
   accessModes:
-    - {{ .Values.api.persistence.accessMode | quote }}
+    - {{ .Values.persistence.accessMode | quote }}
   hostPath:
     path: "/mnt/data"
 {{- end }}

@@ -15,10 +15,10 @@ There's two sub-charts to the Repo.
 
 ## Installing via Helm Repo
 
-1. Add Bee Repo
 ```console
-helm repo add beeraspberry https://beeraspberry.github.io/helm-charts/
+helm repo add beeweb https://beeraspberry.github.io/helm-charts/
 helm repo update
+helm install <release name> beeweb/bee-web -n <namespace>
 ```
 
 | Parameter | Description    | Default |

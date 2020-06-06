@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.api.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "bee-api.selectorLabels" . | nindent 6 }}
@@ -15,15 +15,15 @@ spec:
       labels:
         {{- include "bee-api.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.api.imagePullSecrets }}
+    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
 #      serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
     
-    {{- if .Values.api.persistence.enabled }}
+    {{- if .Values.persistence.enabled }}
       volumes:
         - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
@@ -32,23 +32,22 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.api.securityContext | nindent 12 }}
-          image: "{{ .Values.api.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
-    {{- if .Values.api.persistence.enabled }}          
+    {{- if .Values.persistence.enabled }}          
           volumeMounts:
             - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"
-    {{-end }}
-    {{- if .Values.api.database.type == "sqlite" }}
+    {{- end }}
+    {{- if eq .Values.database.type "sqlite" }}
           env:
            {{- toYaml . | nindent 12 }}
-       {{- end }}   
-    {{- if .Values.api.database.type != "sqlite" }}
+    {{- else }}
           env:
           - name: DATABASE_TYPE
             valueFrom:
@@ -90,16 +89,16 @@ spec:
               path: /health
               port: http
           resources:
-            {{- toYaml .Values.api.resources | nindent 12 }}
-      {{- with .Values.api.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api.affinity }}
+    {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api.tolerations }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

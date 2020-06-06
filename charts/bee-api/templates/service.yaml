@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Chart.Name }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "bee-api.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.api.service.type }}
-  {{- with .Values.api.service.ports }}
+  type: {{ .Values.service.type }}
+  {{- with .Values.service.ports }}
   ports:
   {{- toYaml . | nindent 4 }}
   {{- end }} 
