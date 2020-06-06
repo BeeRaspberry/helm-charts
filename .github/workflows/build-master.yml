@@ -96,6 +96,11 @@ jobs:
           echo ::set-env name=VERSION_CHANGE::1
         fi
 
+    - name: Where am I
+      run: |
+        pwd
+        ls -l
+        
     - name: Publish Bee api helm packages
       if: env.VERSION_CHANGE == 1 
       uses: helm/chart-releaser-action@master
