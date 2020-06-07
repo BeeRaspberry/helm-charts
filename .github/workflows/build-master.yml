@@ -32,7 +32,7 @@ jobs:
     - name: Increment Version - charts/bee-api
       run: |
         API_VERSION=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml|grep +version|\
-         awk -F ': ' '{print$ NF}'
+         awk -F ': ' '{print$ NF}')
         if [[ -z "$API_VERSION" ]]; then
           IFS='.'; read -r -a array <<< "$(grep version: charts/bee-api/Chart.yaml |\
            awk -F ': ' '{print $NF}')"
@@ -46,7 +46,7 @@ jobs:
     - name: Check Version change - charts/bee-ui
       run: |
         UI_VERION=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml|grep +version|\
-         awk -F ': ' '{print$ NF}'
+         awk -F ': ' '{print$ NF}')
         if [[ -z "$UI_VERSION" ]]; then
           IFS='.'; read -r -a array <<< "$(grep version: charts/bee-ui/Chart.yaml |\
            awk -F ': ' '{print $NF}')"
