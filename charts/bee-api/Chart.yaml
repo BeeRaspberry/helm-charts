@@ -4,7 +4,7 @@ description: Bee Web backend
 
 type: application
 
-version: 1.6.0
+version: 1.6.1
 appVersion: 1.6.0
 
 home: https://github.com/BeeRaspberry/helm-charts

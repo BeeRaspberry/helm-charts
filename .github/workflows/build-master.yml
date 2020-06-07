@@ -21,9 +21,6 @@ jobs:
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        echo ::set-env name=VERSION_CHANGE::0
-        echo ::set-env name=API_VERSION_CHANGE::0
-        echo ::set-env name=UI_VERSION_CHANGE::0
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
@@ -32,44 +29,51 @@ jobs:
         msg: ${{ github.repository }}
         seperator: "/"
   
-    - name: Check Version change - charts/bee-api
+    - name: Increment Version - charts/bee-api
       run: |
-        DIFF=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml)
-        if [[ ! -z "$DIFF" ]]; then
-          echo ::set-env name=VERSION_CHANGE::1
-          echo ::set-env name=API_VERSION_CHANGE::1
+        API_VERSION=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml|grep +version|\
+         awk -F ': ' '{print$ NF}'
+        if [[ -z "$API_VERSION" ]]; then
+          IFS='.'; read -r -a array <<< "$(grep version: charts/bee-api/Chart.yaml |\
+           awk -F ': ' '{print $NF}')"
+          CNT=$((${array[1]} + 1))
+          API_VERSION="${array[0]}.${CNT}.0"
+          sed -i "s/^version: .*/version: ${API_VERSION}/" charts/bee-api/Chart.yaml
+          git add charts/bee-api/Chart.yaml
+          git commit -m "Updated version in charts/bee-api/Chart.yaml"
         fi
 
     - name: Check Version change - charts/bee-ui
       run: |
-        DIFF=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml)
-        if [[ ! -z "$DIFF" ]]; then
-          echo ::set-env name=VERSION_CHANGE::1
-          echo ::set-env name=UI_VERSION_CHANGE::1
+        UI_VERION=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml|grep +version|\
+         awk -F ': ' '{print$ NF}'
+        if [[ -z "$UI_VERSION" ]]; then
+          IFS='.'; read -r -a array <<< "$(grep version: charts/bee-ui/Chart.yaml |\
+           awk -F ': ' '{print $NF}')"
+          CNT=$((${array[1]} + 1))
+          UI_VERSION="${array[0]}.${CNT}.0"
+          sed -i "s/^version: .*/version: ${UI_VERSION}/" charts/bee-ui/Chart.yaml
+          git add charts/bee-api/Chart.yaml
+          git commit -m "Updated version in charts/bee-api/Chart.yaml"
         fi
 
     - name: Update dependency version of bee-api
-      if: env.API_VERSION_CHANGE == 1
       run: |
-        VERSION=$(grep appVersion: charts/bee-api/Chart.yaml | awk -F ': ' '{print $NF}')
         printf "/- name: bee-api/" >sed-command
         printf '!b;n;c\ \ version: ' >>sed-command
-        printf "${VERSION}" >>sed-command
+        printf "${API_VERSION}" >>sed-command
         sed -f sed-command Chart.yaml
 
     - name: Update dependency version of bee-ui
-      if: env.UI_VERSION_CHANGE == 1
       run: |
-        grep appVersion: charts/bee-ui/Chart.yaml | awk -F ': ' '{print $NF}'
         printf "/- name: bee-ui/" >sed-command
         printf '!b;n;c\ \ version: ' >>sed-command
-        printf "${VERSION}" >>sed-command
+        printf "${UI_VERSION}" >>sed-command
         sed -f sed-command Chart.yaml
 
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
-      if: env.VERSION_CHANGE == 1
       run: |
         IFS='.'; read -r -a array <<< "$(grep version: Chart.yaml | head -1 | awk -F ': ' '{print $NF}')"
         CNT=$((${array[1]} + 1))
@@ -77,35 +81,19 @@ jobs:
         IFS='.'; read -r -a array <<< "$(grep appVersion: Chart.yaml | awk -F ': ' '{print $NF}')"
         CNT=$((${array[1]} + 1))
         sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" Chart.yaml
-        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        git config --local user.name ${GITHUB_ACTOR}
         git add Chart.yaml
         git commit -m "Updated dependencies in Chart.yaml"
 
     - name: Push changes to master
-      if: env.VERSION_CHANGE == 1
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
 
-    - name: Check Version change - Chart.yaml
-      run: |
-        DIFF=$(git diff HEAD^ HEAD Chart.yaml)
-        if [[ ! -z "$DIFF" ]]; then
-          echo ::set-env name=VERSION_CHANGE::1
-        fi
-
-    - name: Where am I
-      run: |
-        pwd
-        ls -l
-
     - name: Publish Bee api helm packages
-      if: env.VERSION_CHANGE == 1 
       uses: helm/chart-releaser-action@v1.0.0-rc.2
       with:
-        charts_dir: ./
+        charts_dir: .
 #        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
