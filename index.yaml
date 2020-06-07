@@ -1,40 +1,14 @@
 apiVersion: v1
 entries:
-  bee-api:
+  bee-web:
   - apiVersion: v2
-    appVersion: 1.6.0
-    created: "2020-06-06T00:19:36.700904831Z"
-    dependencies:
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 8.10.5
-    description: Bee Web backend
-    digest: 4f16c288eebd8483a154f658888cbdda7a8ddbf7d62a11d7a214dfcab07d4d7a
-    home: https://github.com/BeeRaspberry/helm-charts
-    maintainers:
-    - name: Peter White
-    name: bee-api
-    sources:
-    - https://github.com/BeeRaspberry/bee-api
+    appVersion: 1.12.0
+    created: "2020-06-07T10:23:01.8696605-04:00"
+    description: A Helm chart for for building Bee Web
+    digest: d030ad830069f77f8525b878857faa52bc3d0c8b0c4480f41eb77da97d8796d0
+    name: bee-web
     type: application
     urls:
-    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-api-1.6.0/bee-api-1.6.0.tgz
-    version: 1.6.0
-  bee-ui:
-  - apiVersion: v2
-    appVersion: 1.11.0
-    created: "2020-06-06T02:35:14.667553035Z"
-    description: Bee Web Frontend
-    digest: dd5da81eace08ec5f3e83812d4c63215a065970c366a4df71e340ce920be953a
-    home: https://github.com/BeeRaspberry/helm-charts
-    maintainers:
-    - name: Peter White
-    name: bee-ui
-    sources:
-    - https://github.com/BeeRaspberry/beeweb-ui
-    type: application
-    urls:
-    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-ui-1.11.0/bee-ui-1.11.0.tgz
-    version: 1.11.0
-generated: "2020-06-06T00:19:36.579111937Z"
+    - https://beeraspberry.github.io/helm-packages/bee-web-1.7.1.tgz
+    version: 1.7.1
+generated: "2020-06-07T10:23:01.8656275-04:00"
