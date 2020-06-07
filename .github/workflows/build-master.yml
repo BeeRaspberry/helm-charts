@@ -53,8 +53,8 @@ jobs:
           CNT=$((${array[1]} + 1))
           UI_VERSION="${array[0]}.${CNT}.0"
           sed -i "s/^version: .*/version: ${UI_VERSION}/" charts/bee-ui/Chart.yaml
-          git add charts/bee-api/Chart.yaml
-          git commit -m "Updated version in charts/bee-api/Chart.yaml"
+          git add charts/bee-ui/Chart.yaml
+          git commit -m "Updated version in charts/bee-ui/Chart.yaml"
         fi
 
     - name: Update dependency version of bee-api
