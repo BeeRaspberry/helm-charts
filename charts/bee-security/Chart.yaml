@@ -1,0 +1,12 @@
+apiVersion: v2
+name: bee-security
+description: A Helm chart for implementing security
+
+type: application
+icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
+
+version: 0.1.0
+appVersion: 0.1.0
+
+maintainers:
+  - name: Peter White

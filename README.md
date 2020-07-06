@@ -47,18 +47,18 @@ helm repo update
 3. Install Database (how to create user for the bee api?)
 ```console
 # Install Postgres
-helm install bitnami/postgresql
+helm install <name> bitnami/postgresql -n <name space>
 # Install mysql
-helm install bitnami/mysql
+helm install <name> bitnami/mysql -n <name space>
 ```
 
 4. Install Bee Api
 ```console
-helm install beeraspberry/bee-api
+helm install <name> beeraspberry/bee-api -n <name space>
 # override the following values:
 ```
 
 5. Install Bee Web
 ```console
-helm install beeraspberry/bee-ui
+helm install <name> beeraspberry/bee-ui -n <name space>
 ```
