@@ -7,6 +7,8 @@ on:
 
 # Job builds Helm packages when Chart.yml changes. Check required to keep package process from failing.
 # Package creation only occurs on the 'master' branch.
+
+# Auto-increments version info for each chart if developer forgets.
 jobs:
   build:
 
@@ -21,6 +23,7 @@ jobs:
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        echo ::set-env name=VERSION_CHANGE::0
 
     - name: Run chart-testing (lint)
       id: lint
@@ -45,6 +48,21 @@ jobs:
         msg: ${{ github.repository }}
         seperator: "/"
   
+    - name: Check for change in charts/bee-api
+      id: api_change
+      run: |
+        echo "##[set-output name=change;]$(git diff HEAD^ HEAD charts/bee-api | wc -l)"
+
+    - name: Check for change in charts/bee-ui
+      id: ui_change
+      run: |
+        echo "##[set-output name=change;]$(git diff HEAD^ HEAD charts/bee-ui | wc -l)"
+
+    - name: Check for change in charts/bee-security
+      id: security_change
+      run: |
+        echo "##[set-output name=change;]$(git diff HEAD^ HEAD charts/bee-security | wc -l)"
+
     - name: Increment Version - charts/bee-api
       run: |
         API_VERSION=$(git diff HEAD^ HEAD charts/bee-api/Chart.yaml|grep +version|\
@@ -58,10 +76,12 @@ jobs:
           git add charts/bee-api/Chart.yaml
           git commit -m "Updated version in charts/bee-api/Chart.yaml"
         fi
+        echo ::set-env name=VERSION_CHANGE::1
+      if: steps.api_change.outputs.change > 0
 
     - name: Check Version change - charts/bee-ui
       run: |
-        UI_VERION=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml|grep +version|\
+        UI_VERSION=$(git diff HEAD^ HEAD charts/bee-ui/Chart.yaml|grep +version|\
          awk -F ': ' '{print$ NF}')
         if [[ -z "$UI_VERSION" ]]; then
           IFS='.'; read -r -a array <<< "$(grep version: charts/bee-ui/Chart.yaml |\
@@ -72,21 +92,49 @@ jobs:
           git add charts/bee-ui/Chart.yaml
           git commit -m "Updated version in charts/bee-ui/Chart.yaml"
         fi
+        echo ::set-env name=VERSION_CHANGE::1
+      if: steps.ui_change.outputs.change > 0
 
-    - name: Update dependency version of bee-api
+    - name: Check Version change - charts/bee-security
       run: |
-        printf "/- name: bee-api/" >sed-command
-        printf '!b;n;c\ \ version: ' >>sed-command
-        printf "${API_VERSION}" >>sed-command
-        sed -f sed-command Chart.yaml
+        SECURITY_VERSION=$(git diff HEAD^ HEAD charts/bee-security/Chart.yaml|grep +version|\
+         awk -F ': ' '{print$ NF}')
+        if [[ -z "$SECURITY_VERSION" ]]; then
+          IFS='.'; read -r -a array <<< "$(grep version: charts/bee-security/Chart.yaml |\
+           awk -F ': ' '{print $NF}')"
+          CNT=$((${array[1]} + 1))
+          SECURITY_VERSION="${array[0]}.${CNT}.0"
+          sed -i "s/^version: .*/version: ${SECURITY_VERSION}/" charts/bee-security/Chart.yaml
+          git add charts/bee-security/Chart.yaml
+          git commit -m "Updated version in charts/bee-security/Chart.yaml"
+        fi
+        echo ::set-env name=VERSION_CHANGE::1
+      if: steps.security_change.outputs.change > 0
 
-    - name: Update dependency version of bee-ui
-      run: |
-        printf "/- name: bee-ui/" >sed-command
-        printf '!b;n;c\ \ version: ' >>sed-command
-        printf "${UI_VERSION}" >>sed-command
-        sed -f sed-command Chart.yaml
-
+#    - name: Update dependency version of bee-api
+#      run: |
+#        printf "/- name: bee-api/" >sed-command
+#        printf '!b;n;c\ \ version: ' >>sed-command
+#        printf "${API_VERSION}" >>sed-command
+#        sed -f sed-command Chart.yaml
+#      if: steps.api_change.outputs.change > 0
+#
+#    - name: Update dependency version of bee-ui
+#      run: |
+#        printf "/- name: bee-ui/" >sed-command
+#        printf '!b;n;c\ \ version: ' >>sed-command
+#        printf "${UI_VERSION}" >>sed-command
+#        sed -f sed-command Chart.yaml
+#      if: steps.ui_change.outputs.change > 0
+#
+#    - name: Update dependency version of bee-security
+#      run: |
+#        printf "/- name: bee-security/" >sed-command
+#        printf '!b;n;c\ \ version: ' >>sed-command
+#        printf "${SECURITY_VERSION}" >>sed-command
+#        sed -f sed-command Chart.yaml
+#      if: steps.security_change.outputs.change > 0
+      
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
@@ -106,7 +154,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
 
-    - name: Publish Bee api helm packages
+    - name: Publish Bee Web helm packages
       uses: helm/chart-releaser-action@v1.0.0-rc.1
       with:
         charts_dir: ${{ github.repository }}
