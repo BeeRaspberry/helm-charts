@@ -5,7 +5,7 @@ description: A Helm chart for implementing security
 type: application
 icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
 
-version: 0.1.0
+version: 0.2.0
 appVersion: 0.1.0
 
 maintainers:
