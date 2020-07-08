@@ -53,6 +53,12 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+# Helm files
+Chart.lock
+
+# Postgres dependency
+charts/postgres*
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
