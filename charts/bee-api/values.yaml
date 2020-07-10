@@ -68,12 +68,16 @@ securityContext: {}
 # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
-  - name: bee-api
+  - name: http-bee-api
     port: 80
     protocol: TCP
     targetPort: 80
+  - name: https-bee-api
+    port: 443
+    protocol: TCP
+    targetPort: 443
 
 ingress:
   enabled: false
