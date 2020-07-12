@@ -8,8 +8,10 @@ bee-web:
 
 postgresql:
   enabled: true
+  psp.create: true
+  rbac.create: true
 
 bee-api:
   database:
     host: postgres-postgresql-0
-    password: vsa78KlHiQ
+    password: notarealpassword
