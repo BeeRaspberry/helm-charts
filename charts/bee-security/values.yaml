@@ -1,0 +1,2 @@
+podsecuritypolicy:
+  create: false

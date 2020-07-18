@@ -5,6 +5,12 @@ bee-web:
       value: "http://bee-api"
     - name: DOMAIN_NAME
       value: beeweb.space
+    - name: PORT
+      value: 8080
+  ingress:
+    hosts:
+    - host: map-example.local
+      paths: []
 
 postgresql:
   enabled: true
@@ -15,3 +21,18 @@ bee-api:
   database:
     host: postgres-postgresql-0
     password: notarealpassword
+  env:
+  - name: SERVICE_NAME
+    value: "http://bee-api"
+  - name: DOMAIN_NAME
+    value: beeweb.space
+  - name: PORT
+    value: 8080
+
+cluster-security:
+  podsecuritypolicy:
+    create: true
+
+bee-security:
+  podsecuritypolicy:
+    create: true

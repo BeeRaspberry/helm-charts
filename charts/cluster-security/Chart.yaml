@@ -1,6 +1,6 @@
 apiVersion: v2
-name: bee-security
-description: A Helm chart for implementing security for Bee Web site
+name: cluster-security
+description: A Helm chart for implementing security at a Cluster level
 
 type: application
 icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon

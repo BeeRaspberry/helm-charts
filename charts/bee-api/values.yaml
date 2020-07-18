@@ -1,7 +1,7 @@
 ReplicaCount: 1
 
 image:
-  repository: beeraspberry/bee-api
+  repository: bee-api
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -28,6 +28,12 @@ database:
 env:
   - name: DATABASE_DIR
     value: "/data"
+  - name: DOMAIN_NAME
+    value: example.com
+  - name: PORT
+    value: 8080
+  - name: SERVICE_NAME
+    value: http://localhost
 
 nameOverride: ""
 fullnameOverride: ""
@@ -59,13 +65,13 @@ serviceAccount:
 podSecurityContext: {}
 # fsGroup: 2000
 
-securityContext: {}
+securityContext: 
 # capabilities:
 #   drop:
 #   - ALL
 # readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsUser: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
 
 service:
   type: LoadBalancer
