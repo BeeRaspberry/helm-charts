@@ -18,7 +18,7 @@ There's two sub-charts to the Repo.
 
 ## Optional
 
-A relation database for storing data. The Helmchart defaults to Sqlite. This option is sufficient for single pod deployments. For scalable options, a relation datbase is the way to go.
+A relation database for storing data. The Helmchart defaults to Sqlite suffiences for single pod deployments. For scalable options, a relation database is the way to go.
 
 ## Installing via Helm Repo with default, Sqlite database.
 
