@@ -22,10 +22,13 @@ spec:
 #      serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    
-    {{- if .Values.persistence.enabled }}
+
       volumes:
-        - name: "{{ .Chart.Name }}-volume"
+        - name: "{{ .Chart.Name }}-config-volume"
+          secret:
+            secretName: "{{ .Release.Name }}-config-secret"
+    {{- if .Values.persistence.enabled }}
+        - name: "{{ .Chart.Name }}-data-volume"
           persistentVolumeClaim:
             claimName: "{{ .Chart.Name }}-claim"
     {{- end }}
@@ -37,49 +40,17 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8000
               protocol: TCP
-    {{- if .Values.persistence.enabled }}          
           volumeMounts:
-            - name: "{{ .Chart.Name }}-volume"
+            - name: "{{ .Chart.Name }}-config-volume"
+              mountPath: "/etc/bee-api/"
+    {{- if .Values.persistence.enabled }}          
+            - name: "{{ .Chart.Name }}-data-volume"
               mountPath: "/data"
     {{- end }}
-    {{- if eq .Values.database.type "sqlite" }}
           env:
-           {{- toYaml . | nindent 12 }}
-    {{- else }}
-          env:
-          - name: DATABASE_TYPE
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: type
-          - name: DATABASE_HOST
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: host
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: databaseName
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: username
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: port
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: password
-    {{- end }}      
+           {{- toYaml .Values.env | nindent 12 }}     
           livenessProbe:
             httpGet:
               path: /health

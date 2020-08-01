@@ -26,13 +26,13 @@ service:
   type: LoadBalancer
   ports:
   - name: http-bee-web
-    port: 8080
+    port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   - name: https-bee-web
-    port: 8080
+    port: 443
     protocol: TCP
-    targetPort: 443
+    targetPort: 8080
 nginxConfig:
    serviceName: http://localhost
    port: 8080

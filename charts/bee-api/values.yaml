@@ -1,7 +1,7 @@
 ReplicaCount: 1
 
 image:
-  repository: beeraspberry/bee-api
+  repository: bee-api
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -16,18 +16,19 @@ volumeMounts:
     name: bee-api-volume
 
 database:
-  enabled: true
   port: 5432
   username: beeapi
   password:
   host:
-  databaseName: beeapi
+  database: beeapi
   type: postgresql
 
 
 env:
   - name: DATABASE_DIR
     value: "/data"
+  - name: CONFIG_FILE
+    value: /etc/bee-api/config.cfg
 
 nameOverride: ""
 fullnameOverride: ""
@@ -73,11 +74,11 @@ service:
   - name: http-bee-api
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8000
   - name: https-bee-api
     port: 443
     protocol: TCP
-    targetPort: 443
+    targetPort: 8000
 
 ingress:
   enabled: false
@@ -108,3 +109,44 @@ affinity: {}
 
 frontend:
   enabled: false
+
+config:
+  general:
+    app_name: bee_mine
+    debug: False
+    testing: False
+  db:
+    sqlalchemy_track_modifications: False
+
+  # SQLALCHEMY_DATABASE_URI = '<database type>://<db user>:<db password>@
+  #         <db host>:<db port>/<db name>'
+  security:
+    bcrypt_log_rounds: 13
+    password_hash: pbkdf2_sha512
+    password_salt: mySalt
+    token_authentication_key: auth_token 
+    token_authentication_header: Authentication-Token
+    token_max_age: 1800
+    trackable: True
+    recoverable: True
+    confirmable: False
+    registerable: True
+    send_register_email: False
+    user_identity_attributes: email
+    login_url: /login
+    wtf_csrf_enabled: False
+  email:
+    server: smtp.sendgrid.net
+    port: 587
+    use_tls: True
+    use_ssl: False
+    username: 
+    password: 
+    default_sender:
+  admin:
+    email:
+    password:
+  social:
+    google:
+      key:
+      secret: 
