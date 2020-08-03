@@ -15,15 +15,6 @@ volumeMounts:
   - mountPath: "/data"
     name: bee-api-volume
 
-database:
-  port: 5432
-  username: beeapi
-  password:
-  host:
-  database: beeapi
-  type: postgresql
-
-
 env:
   - name: DATABASE_DIR
     value: "/data"
@@ -108,15 +99,21 @@ tolerations: []
 affinity: {}
 
 frontend:
-  enabled: false
+  enabled: False
 
 config:
   general:
     app_name: bee_mine
     debug: False
     testing: False
-  db:
+  database:
     sqlalchemy_track_modifications: False
+    port: 5432
+    username: beeapi
+    password: mypassword
+    host: localhost
+    database: beeapi
+    type: postgresql
 
   # SQLALCHEMY_DATABASE_URI = '<database type>://<db user>:<db password>@
   #         <db host>:<db port>/<db name>'
@@ -140,13 +137,13 @@ config:
     port: 587
     use_tls: True
     use_ssl: False
-    username: 
-    password: 
-    default_sender:
+    username: '' 
+    password: ''
+    default_sender: ''
   admin:
-    email:
-    password:
+    email: ''
+    password: ''
   social:
     google:
-      key:
-      secret: 
+      key: ''
+      secret: '' 

@@ -44,7 +44,8 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: "{{ .Chart.Name }}-config-volume"
-              mountPath: "/etc/bee-api/"
+              mountPath: "/etc/bee-api"
+              readOnly: true
     {{- if .Values.persistence.enabled }}          
             - name: "{{ .Chart.Name }}-data-volume"
               mountPath: "/data"
