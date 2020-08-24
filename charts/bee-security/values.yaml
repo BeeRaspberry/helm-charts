@@ -1,0 +1,5 @@
+domain_name: beeweb.space
+ingress: bee-ingress-ingress
+project_id: bee-web-283001
+dns_service_name: clouddns-dns01-solver-svc-acct
+dns_key: key.json

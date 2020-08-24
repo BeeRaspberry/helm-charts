@@ -27,6 +27,16 @@ spec:
         - name: "{{ .Chart.Name }}-config-volume"
           secret:
             secretName: "{{ .Release.Name }}-config-secret"
+    {{- if .Values.sslEncrypt }}
+        - name: ssl-certs
+          secret:
+            secretName: {{ .Values.domain_name | replace "." "-" }}-tls
+            items:
+            - key: tls.crt
+              path: cert
+            - key: tls.key
+              path: key
+    {{- end }}
     {{- if .Values.persistence.enabled }}
         - name: "{{ .Chart.Name }}-data-volume"
           persistentVolumeClaim:
@@ -46,6 +56,11 @@ spec:
             - name: "{{ .Chart.Name }}-config-volume"
               mountPath: "/etc/bee-api"
               readOnly: true
+    {{- if .Values.sslEncrypt }}
+            - name: ssl-certs
+              mountPath: /etc/ssl
+              readOnly: true
+    {{- end }}
     {{- if .Values.persistence.enabled }}          
             - name: "{{ .Chart.Name }}-data-volume"
               mountPath: "/data"

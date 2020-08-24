@@ -1,17 +1,33 @@
 # Default values for bee-web
 bee-web:
+  sslEncrypt: true
+  domain_name: beeweb.space
   env:
     - name: SERVICE_NAME
       value: "http://bee-api"
     - name: DOMAIN_NAME
       value: beeweb.space
 
+bee-security:
+  domain_name: beeweb.space
+
 postgresql:
   enabled: true
   psp.create: true
   rbac.create: true
-
+  tolerations:
+    - key: harness-node
+      operator: Exists
+      effect: NoSchedule
+      
 bee-api:
   database:
     host: postgres-postgresql-0
     password: notarealpassword
+  sslEncrypt: true
+  domain_name: beeweb.space
+  env:
+  - name: CONFIG_FILE
+    value: /etc/bee-api/config.cfg
+  - name: GUNICORN_CMD_ARGS
+    value: "--bind=0.0.0.0:8000 --workers=2 --threads=2 --worker-tmp-dir /dev/shm --access-logfile=- --log-file=- --ssl_version TLS --certfile /etc/ssl/cert --keyfile /etc/ssl/key"

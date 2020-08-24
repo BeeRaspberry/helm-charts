@@ -1,0 +1,12 @@
+apiVersion: v2
+name: bee-ingress
+description: A Helm chart for implementing ingress
+
+type: application
+icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
+
+version: 0.2.0
+appVersion: 0.1.0
+
+maintainers:
+  - name: Peter White

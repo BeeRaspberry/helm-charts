@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-staging
+  namespace: {{ .Release.Namespace }}
+spec:
+  acme:
+    email: pwhite@delpwhite.org
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-issuer-account-key
+    solvers:
+    - dns01:
+        clouddns:
+          project: {{ .Values.project_id }}
+          serviceAccountSecretRef:
+            name: {{ .Values.dns_service_name }}
+            key: {{ .Values.dns_key }}

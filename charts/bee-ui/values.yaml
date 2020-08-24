@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: bee-ui
+  repository: beeraspberry/bee-ui
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 nameOverride: ""
@@ -69,3 +69,4 @@ env:
     value: "false"
   - name: PRODUCTION
     value: "true"
+sslEncrypt: false
