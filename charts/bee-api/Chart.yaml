@@ -5,8 +5,8 @@ description: Bee Web backend
 type: application
 
 icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
-version: 1.13.0
-appVersion: 1.13.0
+version: 1.14.0
+appVersion: 1.14.0
 
 home: https://github.com/BeeRaspberry/helm-charts
 sources:
