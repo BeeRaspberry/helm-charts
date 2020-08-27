@@ -1,15 +1,19 @@
 # Default values for bee-web
-bee-web:
+bee-ui:
   sslEncrypt: true
   domain_name: beeweb.space
+  backend: https://bee-api
   env:
     - name: SERVICE_NAME
-      value: "http://bee-api"
+      value: "https://bee-api"
     - name: DOMAIN_NAME
       value: beeweb.space
 
 bee-security:
   domain_name: beeweb.space
+  letsEncrypt:
+    acme_server: https://acme-v02.api.letsencrypt.org/directory
+    issuer: letsencrypt-prod
 
 postgresql:
   enabled: true
@@ -30,4 +34,9 @@ bee-api:
   - name: CONFIG_FILE
     value: /etc/bee-api/config.cfg
   - name: GUNICORN_CMD_ARGS
-    value: "--bind=0.0.0.0:8000 --workers=2 --threads=2 --worker-tmp-dir /dev/shm --access-logfile=- --log-file=- --ssl_version TLS --certfile /etc/ssl/cert --keyfile /etc/ssl/key"
+    value: "--bind=0.0.0.0:8000 --workers=2 --threads=2 --worker-tmp-dir /dev/shm --access-logfile=- --log-file=- --ssl-version TLS --certfile /etc/ssl/cert --keyfile /etc/ssl/key"
+
+bee-ingress:
+  domain_name: beeweb.space
+  letsEncrypt:
+    issuer: letsencrypt-prod

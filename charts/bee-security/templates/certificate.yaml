@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: {{ .Values.domain_name | replace "." "-" }}-tls
   issuerRef:
-    name: letsencrypt-staging
+    name: {{ .Values.letsEncrypt.issuer }}
     kind: Issuer
   commonName: {{ .Values.domain_name }}
   dnsNames:

@@ -4,7 +4,9 @@ metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    haproxy.org/check: "true"
+    haproxy.org/check-http: "/health"
+    cert-manager.io/issuer: {{ .Values.letsEncrypt.issuer }}
 spec:
   rules:
   - host: api.{{ .Values.domain_name }}
@@ -13,8 +15,16 @@ spec:
       - path: /
         backend:
           serviceName: bee-api
-          servicePort: 80
+          servicePort: 443
+  - host: www.{{ .Values.domain_name }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: bee-ui
+          servicePort: 443
   tls:
     - hosts:
         - api.{{ .Values.domain_name }}
+        - beeweb.{{ .Values.domain_name }}
       secretName: {{ .Values.domain_name | replace "." "-" }}-tls

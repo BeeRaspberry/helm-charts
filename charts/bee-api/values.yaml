@@ -62,7 +62,7 @@ securityContext: {}
 # runAsUser: 1000
 
 service:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - name: http-bee-api
     port: 80

@@ -3,3 +3,6 @@ ingress: bee-ingress-ingress
 project_id: bee-web-283001
 dns_service_name: clouddns-dns01-solver-svc-acct
 dns_key: key.json
+letsEncrypt:
+  acme_server: https://acme-staging-v02.api.letsencrypt.org/directory
+  issuer: letsencrypt-staging

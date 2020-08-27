@@ -22,16 +22,22 @@ spec:
 #      serviceAccountName: {{ include "bee-ui.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{- if .Values.sslEncrypt }}
       volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ .Release.Name }}-nginx-config
+            items:
+            - key: conf-default.conf
+              path: default.conf
+      {{- if .Values.sslEncrypt }}
         - name: ssl-certs
           secret:
             secretName: {{ .Values.domain_name | replace "." "-" }}-tls
             items:
             - key: tls.crt
-              path: cert
+              path: cert.crt
             - key: tls.key
-              path: key
+              path: cert.key
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -40,27 +46,47 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+    {{- if .Values.sslEncrypt }}
+            - name: https
+              containerPort: 443
+              protocol: TCP   
+    {{- else }}
             - name: http
               containerPort: 80
               protocol: TCP   
+    {{- end }}
           volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
     {{- if .Values.sslEncrypt }}
             - name: ssl-certs
-              mounPatht: /etc/ssl
+              mountPath: /etc/ssl
               readOnly: true
     {{- end }}
         {{- with .Values.env }}
           env:
         {{- toYaml . | nindent 12 }}
-      {{- end }}    
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+      {{- end }}
+#    {{- if .Values.sslEncrypt }}    
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: https
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: https
+#    {{- else }}
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#            port: http
+#    {{- end }}    
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
