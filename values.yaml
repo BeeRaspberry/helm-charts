@@ -1,7 +1,5 @@
 # Default values for bee-web
 bee-ui:
-  sslEncrypt: true
-  domain_name: beeweb.space
   backend: https://bee-api
   env:
     - name: SERVICE_NAME
@@ -28,13 +26,12 @@ bee-api:
   database:
     host: postgres-postgresql-0
     password: notarealpassword
-  sslEncrypt: true
   domain_name: beeweb.space
   env:
   - name: CONFIG_FILE
     value: /etc/bee-api/config.cfg
-  - name: GUNICORN_CMD_ARGS
-    value: "--bind=0.0.0.0:8000 --workers=2 --threads=2 --worker-tmp-dir /dev/shm --access-logfile=- --log-file=- --ssl-version TLS --certfile /etc/ssl/cert --keyfile /etc/ssl/key"
+#  - name: GUNICORN_CMD_ARGS
+#    value: "--bind=0.0.0.0:8000 --workers=2 --threads=2 --worker-tmp-dir /dev/shm --access-logfile=- --log-file=- --ssl-version TLS --certfile /etc/ssl/cert --keyfile /etc/ssl/key"
 
 bee-ingress:
   domain_name: beeweb.space

@@ -61,7 +61,7 @@ spec:
               readOnly: true
     {{- if .Values.sslEncrypt }}
             - name: ssl-certs
-              mountPath: /etc/ssl
+              mountPath: /etc/certs
               readOnly: true
     {{- end }}
         {{- with .Values.env }}

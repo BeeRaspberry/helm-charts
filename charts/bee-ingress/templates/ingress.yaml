@@ -4,8 +4,7 @@ metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
-    haproxy.org/check: "true"
-    haproxy.org/check-http: "/health"
+    haproxy.org/path-rewrite: /
     cert-manager.io/issuer: {{ .Values.letsEncrypt.issuer }}
 spec:
   rules:
@@ -15,14 +14,14 @@ spec:
       - path: /
         backend:
           serviceName: bee-api
-          servicePort: 443
+          servicePort: 80
   - host: www.{{ .Values.domain_name }}
     http:
       paths:
       - path: /
         backend:
           serviceName: bee-ui
-          servicePort: 443
+          servicePort: 80
   tls:
     - hosts:
         - api.{{ .Values.domain_name }}
