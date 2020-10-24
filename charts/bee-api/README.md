@@ -1,21 +1,24 @@
 # Bee-Api Helm Chart
 
 ## Introduction
+
 This chart deploys the backend API for the Bee Project.
 
 ## Prerequisites
 
-- Kubernetes 1.12+
+- Kubernetes 1.16+
 - Helm 3.x.+
 
 ## Install using Git
 
 1. Clone the Helm Chart Repo
+
 ```console
 git clone https://https://github.com/BeeRaspberry/helm-charts.git
 ```
 
 2. Install the chart
+
 ```console
 cd charts/bee-api
 helm install <release name> . -n <release namespace>
@@ -62,8 +65,7 @@ Parameter | Description | Default
 `ingress` | |
  enabled: false
  annotations: {}
- # kubernetes.io/ingress.class: nginx
- # kubernetes.io/tls-acme: "true"
+
  hosts:
    - host: map-example.local
      paths: []
