@@ -1,0 +1,20 @@
+{{- if eq .Values.beeApi.database.type "sqlite" }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ .Chart.Name }}-claim"
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.beeApi.persistence.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "bee-api.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.beeApi.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.beeApi.persistence.size | quote }}
+  storageClassName: {{ .Values.beeApi.persistence.storageClass | quote }}
+{{- end }}

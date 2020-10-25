@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}-api
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "bee-api.labels" . | nindent 4 }}
+    {{- include "bee-web.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.beeApi.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bee-api.selectorLabels" . | nindent 6 }}
+      {{- include "bee-web.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bee-api.selectorLabels" . | nindent 8 }}
+        {{- include "bee-web.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.beeApi.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-#      serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
+      serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.beeApi.podSecurityContext | nindent 8 }}
     
-    {{- if .Values.persistence.enabled }}
+    {{- if .Values.beeApi.persistence.enabled }}
       volumes:
         - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
@@ -32,19 +32,19 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.beeApi.securityContext | nindent 12 }}
+          image: "{{ .Values.beeApi.image.repository }}:{{ .Values.beeApi.image.version }}"
+          imagePullPolicy: {{ .Values.beeApi.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-    {{- if .Values.persistence.enabled }}          
+    {{- if .Values.beeApi.persistence.enabled }}          
           volumeMounts:
             - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"
     {{- end }}
-    {{- if eq .Values.database.type "sqlite" }}
+    {{- if eq .Values.beeApi.database.type "sqlite" }}
           env:
            {{- toYaml . | nindent 12 }}
     {{- else }}
@@ -89,16 +89,16 @@ spec:
               path: /health
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.beeApi.resources | nindent 12 }}
+      {{- with .Values.beeApi.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.beeApi.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.beeApi.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

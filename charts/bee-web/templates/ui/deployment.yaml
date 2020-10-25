@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}-ui
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "bee-ui.labels" . | nindent 4 }}
+    {{- include "bee-web.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.beeUi.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bee-ui.selectorLabels" . | nindent 6 }}
+      {{- include "bee-web.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bee-ui.selectorLabels" . | nindent 8 }}
+        {{- include "bee-web.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.beeUi.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-#      serviceAccountName: {{ include "bee-ui.serviceAccountName" . }}
+      serviceAccountName: {{ include "bee-ui.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.beeUi.podSecurityContext | nindent 8 }}
 
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.beeUi.securityContext | nindent 12 }}
+          image: "{{ .Values.beeUi.image.repository }}:{{ .Values.beeApi.image.version }}"
+          imagePullPolicy: {{ .Values.beeUi.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP   
-        {{- with .Values.env }}
+        {{- with .Values.beeUi.env }}
           env:
         {{- toYaml . | nindent 12 }}
       {{- end }}    
@@ -46,16 +46,16 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.beeUi.resources | nindent 12 }}
+      {{- with .Values.beeUi.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.beeUi.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.beeUi.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

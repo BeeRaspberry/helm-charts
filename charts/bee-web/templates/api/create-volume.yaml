@@ -1,0 +1,17 @@
+{{- if eq .Values.beeApi.database.type "sqlite" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Chart.Name }}-volume
+  labels:
+    {{- include "bee-web.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  storageClassName: {{ .Values.beeApi.persistence.storageClass | quote }}
+  capacity:
+    storage: {{ .Values.beeApi.persistence.size | quote }}
+  accessModes:
+    - {{ .Values.beeApi.persistence.accessMode | quote }}
+  hostPath:
+    path: "/mnt/data"
+{{- end }}
