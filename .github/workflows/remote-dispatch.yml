@@ -18,8 +18,8 @@ jobs:
       run: |
         git config --local user.name ${GITHUB_ACTOR}
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        echo ::set-env name=VERSION_CHANGE::0
-        echo ::set-env name=API_VERSION::"${{ github.event.client_payload.version }}"
+        echo "VERSION_CHANGE=0" >> $GITHUB_ENV
+        echo "API_VERSION="${{ github.event.client_payload.version }}" >> $GITHUB_ENV
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
@@ -33,30 +33,11 @@ jobs:
         echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
         echo "Version: '${{ env.API_VERSION }}'"
 
-    - name: Update version and appVersion in charts/bee-api/Chart.yaml
-      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api'
-      run: |
-        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
-        sed -i "s/^version: .*/version: ${{ env.API_VERSION }}/" charts/bee-api/Chart.yaml
-
-        git add charts/bee-api/Chart.yaml
-        git commit -m "Updated version and appVersion file - bee-api"
-        echo ::set-env name=VERSION_CHANGE::1
-
-    - name: Update version and appVersion in charts/bee-ui/Chart.yaml
-      if: github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
-      run: |
-        sed -i "s/^appVersion: .*/appVersion: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
-        sed -i "s/^version: .*/version: ${{ env.API_VERSION }}/" charts/bee-ui/Chart.yaml
-
-        git add charts/bee-ui/Chart.yaml
-        git commit -m "Updated version and appVersion file - bee-ui"
-        echo ::set-env name=VERSION_CHANGE::1
-
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
-      if: env.VERSION_CHANGE == 1
+      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api' ||
+          github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
       run: |
         VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
         IFS='.'; read -r -a array <<< "$VERSION"
@@ -70,6 +51,8 @@ jobs:
         git add Chart.yaml
         git commit -m "Updated main Chart.yml"
 
+        echo "VERSION_CHANGE=1" >> $GITHUB_ENV
+
     - name: Push changes to master
       if: env.VERSION_CHANGE == 1
       uses: ad-m/github-push-action@master
@@ -78,7 +61,8 @@ jobs:
         force: true
 
     - name: Publish Bee Web helm packages
-      uses: helm/chart-releaser-action@master
+      if: env.VERSION_CHANGE == 1
+      uses: helm/chart-releaser-action@v1.0.0
       with:
         charts_dir: .
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages

@@ -28,10 +28,10 @@ beeApi:
   
   database:
     enabled: true
-    port: 5432
+    port: "5432"
     username: beeapi
-    password: ""
-    host: ""
+    password: "test"
+    host: "test"
     databaseName: beeapi
     type: postgresql
   
@@ -136,8 +136,8 @@ beeApi:
 beeUi:
   replicaCount: 1
   image:
-    repository: beeraspberry/bee-ui
-    pullPolicy: Always
+    repository: bee-ui
+    pullPolicy: Never
     version: latest
   imagePullSecrets: []
   nameOverride: ""
@@ -157,17 +157,13 @@ beeUi:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
+  #  runAsNonRoot: true
+  #  runAsUser: 1000
   service:
     type: LoadBalancer
     ports:
     - name: http-bee-web
       port: 80
-      protocol: TCP
-      targetPort: 8080
-    - name: https-bee-web
-      port: 443
       protocol: TCP
       targetPort: 8080
   ingress:

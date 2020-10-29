@@ -81,3 +81,47 @@ Create the name of the service account to use
 {{- printf "%s://%s:%s" .Values.backend_api.protocol (include "bee-web.fullname" .) .Values.backend_api.port -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "bee-api.config-file" -}}
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+APP_NAME = 'bee_mine'
+DEBUG = False
+TESTING = False
+# SQLALCHEMY_DATABASE_URI = '<database type>://<db user>:<db password>@
+#         <db host>:<db port>/<db name>'
+# SQLALCHEMY_DATABASE_URI = 'sqlite:///bee.db'
+# SQLALCHEMY_DATABASE_URI = 'postgresql://test:test123@localhost:5432/testdb'
+{{- with .Values.beeApi.database }}
+{{- if eq .type "sqlite" }}
+{{ printf "SQLALCHEMY_DATABASE_URI = 'sqlite:///%s'\n" .databaseName }}
+{{- else }}
+{{ printf "SQLALCHEMY_DATABASE_URI = '%s://%s:%s@%s:%s/%s'\n" .type .username .password .host .port .databaseName }}
+{{- end -}}
+{{- end -}}
+BCRYPT_LOG_ROUNDS = 13
+SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'
+SECURITY_PASSWORD_SALT = 'mySalt'
+SECURITY_TOKEN_AUTHENTICATION_KEY = 'auth_token'
+SECURITY_TOKEN_AUTHENTICATION_HEADER = 'Authentication-Token'
+SECURITY_TOKEN_MAX_AGE = 1800
+SECURITY_TRACKABLE = True
+SECURITY_RECOVERABLE = True
+SECURITY_CONFIRMABLE = False
+SECURITY_REGISTERABLE = True
+SECURITY_SEND_REGISTER_EMAIL = False
+SECURITY_USER_IDENTITY_ATTRIBUTES = 'email'
+SECURITY_LOGIN_URL = '/login'
+WTF_CSRF_ENABLED = False
+# Email
+MAIL_SERVER = 'smtp.sendgrid.net'
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USE_SSL = False
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+MAIL_DEFAULT_SENDER = ''
+
+# Admin account
+ADMIN_PASSWORD =''
+ADMIN_EMAIL = ''
+{{- end -}}

@@ -22,9 +22,11 @@ spec:
       serviceAccountName: {{ include "bee-api.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.beeApi.podSecurityContext | nindent 8 }}
-    
-    {{- if .Values.beeApi.persistence.enabled }}
-      volumes:
+      volumes:    
+        - name: config-secret-volume
+          secret:
+            secretName: {{ .Release.Name }}-db-secret
+    {{- if eq .Values.beeApi.database.type "sqlite" }}
         - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
             claimName: "{{ .Chart.Name }}-claim"
@@ -39,55 +41,66 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-    {{- if .Values.beeApi.persistence.enabled }}          
           volumeMounts:
+            - name: config-secret-volume
+              mountPath: /etc/secret-volume
+    {{- if eq .Values.beeApi.database.type "sqlite" }}
             - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"
     {{- end }}
-    {{- if eq .Values.beeApi.database.type "sqlite" }}
           env:
+          - name: CONFIG_FILE
+            value: /etc/secret-volume/config.cfg
+    {{- if eq .Values.beeApi.database.type "sqlite" }}
            {{- toYaml . | nindent 12 }}
     {{- else }}
-          env:
           - name: DATABASE_TYPE
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: type
+    {{- if .Values.beeApi.database.host }}
           - name: DATABASE_HOST
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: host
+    {{- end }}
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: databaseName
+    {{- if .Values.beeApi.database.username }}
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: username
+    {{- end }}
+    {{- if .Values.beeApi.database.port }}
           - name: DATABASE_PORT
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: port
+    {{- end }}
+    {{- if .Values.beeApi.database.password }}
           - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-db-secret
                 key: password
     {{- end }}      
+    {{- end }}      
           livenessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 8000
           readinessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 8000
           resources:
             {{- toYaml .Values.beeApi.resources | nindent 12 }}
       {{- with .Values.beeApi.nodeSelector }}

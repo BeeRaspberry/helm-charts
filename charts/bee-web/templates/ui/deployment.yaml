@@ -32,7 +32,7 @@ spec:
           ports:
             - name: http
               containerPort: 80
-              protocol: TCP   
+              protocol: TCP
         {{- with .Values.beeUi.env }}
           env:
         {{- toYaml . | nindent 12 }}
