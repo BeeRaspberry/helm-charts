@@ -19,7 +19,6 @@ jobs:
         git config --local user.name ${GITHUB_ACTOR}
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         echo "VERSION_CHANGE=0" >> $GITHUB_ENV
-        echo "API_VERSION="${{ github.event.client_payload.version }}" >> $GITHUB_ENV
 
     - name: Get repo and owner
       uses: jungwinter/split@v1
@@ -31,13 +30,13 @@ jobs:
     - name: Event Information
       run: |
         echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
-        echo "Version: '${{ env.API_VERSION }}'"
+        echo "Version: '${{github.event.client_payload.version }}'"
 
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
-      if: github.event.client_payload.repository == 'BeeRaspberry/bee_api' ||
-          github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
+      if: contains(github.event.client_payload.repository,'bee_api') ||
+          contains(github.event.client_payload.repository, 'beeweb-ui')
       run: |
         ls -l
         VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
