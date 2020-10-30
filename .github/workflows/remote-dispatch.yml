@@ -39,6 +39,7 @@ jobs:
       if: github.event.client_payload.repository == 'BeeRaspberry/bee_api' ||
           github.event.client_payload.repository == 'BeeRaspberry/beeweb-ui'
       run: |
+        ls -l
         VERSION=$(grep 'version:' Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
         IFS='.'; read -r -a array <<< "$VERSION"
         CNT=$((${array[1]} + 1))
@@ -64,7 +65,6 @@ jobs:
       if: env.VERSION_CHANGE == 1
       uses: helm/chart-releaser-action@v1.0.0
       with:
-        charts_dir: .
         charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
