@@ -10,13 +10,13 @@
 
 name: build
 
-on: [push]
-#  push:
-#    paths:
-#    - 'charts/**'
-#  pull_request:
-#    paths:
-#    - 'charts/**'
+on:
+  push:
+    paths:
+    - 'charts/**'
+  pull_request:
+    paths:
+    - 'charts/**'
 
 jobs:
   build:
