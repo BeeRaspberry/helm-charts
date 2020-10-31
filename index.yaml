@@ -2,46 +2,14 @@ apiVersion: v1
 entries:
   bee-web:
   - apiVersion: v2
-    appVersion: 1.22.0
-    created: "2020-07-11T10:52:07.9977197-04:00"
-    dependencies:
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 8.10.5
+    appVersion: 1.32.0
+    created: "2020-10-31T01:21:27.776271327Z"
     description: A Helm chart for building Bee Web
-    digest: 0304e464963518e715f42142bf9b8fc342686dd04d897ac89d3f8c644c12bffd
+    digest: 993826b30a6f0af4698cccd515818edaf5db25f283b1154d08c7932ded964d6a
     icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
     name: bee-web
     type: application
     urls:
-    - bee-web-1.17.0.tgz
-    version: 1.17.0
-  postgresql:
-  - apiVersion: v1
-    appVersion: 11.8.0
-    created: "2020-07-11T10:52:08.0007422-04:00"
-    description: Chart for PostgreSQL, an object-relational database management system
-      (ORDBMS) with an emphasis on extensibility and on standards-compliance.
-    digest: 94f1625da7de34e81ae4e167b6ba889f20fa0f85c061ddfe4731d27bc685191b
-    home: https://www.postgresql.org/
-    icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-110x117.png
-    keywords:
-    - postgresql
-    - postgres
-    - database
-    - sql
-    - replication
-    - cluster
-    maintainers:
-    - email: containers@bitnami.com
-      name: Bitnami
-    - email: cedric@desaintmartin.fr
-      name: desaintmartin
-    name: postgresql
-    sources:
-    - https://github.com/bitnami/bitnami-docker-postgresql
-    urls:
-    - charts/postgresql-8.10.5.tgz
-    version: 8.10.5
-generated: "2020-07-11T10:52:07.9837064-04:00"
+    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-web-1.28.0/bee-web-1.28.0.tgz
+    version: 1.28.0
+generated: "2020-10-31T01:21:27.678272921Z"
