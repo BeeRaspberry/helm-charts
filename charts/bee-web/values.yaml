@@ -6,14 +6,14 @@ cluster:
 
 beeApi:
   ReplicaCount: 1
-  
+
   image:
     repository: beeraspberry/bee-api
     version: latest
     pullPolicy: Always
-  
+
   imagePullSecrets: []
-  
+
   database:
     port: "5432"
     username: beeapi
@@ -21,16 +21,16 @@ beeApi:
     host: "test"
     databaseName: beeapi
     type: postgresql
-  
+
   env:
     - name: DOMAIN_NAME
       value: example.com
     - name: PORT
       value: 8000
-  
+
   nameOverride: ""
   fullnameOverride: ""
-  
+
   persistence:
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -44,7 +44,7 @@ beeApi:
     accessMode: ReadWriteOnce
     size: 8Gi
     annotations: {}
-  
+
   serviceAccount:
   # Specifies whether a service account should be created
     create: true
@@ -53,10 +53,10 @@ beeApi:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
     name:
-  
+
   podSecurityContext: {}
   # fsGroup: 2000
-  
+
   securityContext: 
   # capabilities:
   #   drop:
@@ -64,7 +64,7 @@ beeApi:
   # readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
-  
+
   service:
     type: LoadBalancer
     ports:
@@ -72,7 +72,7 @@ beeApi:
       port: 8080
       protocol: TCP
       targetPort: 8000
-  
+
   ingress:
     enabled: false
     annotations: {}
@@ -85,7 +85,7 @@ beeApi:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-  
+
   resources:
     limits:
       cpu: 0.5
@@ -93,20 +93,20 @@ beeApi:
     requests:
       cpu: 250m
       memory: 50Mi
-  
+
   nodeSelector: {}
-  
+
   tolerations: []
-  
+
   affinity: {}
-  
+
   frontend:
     enabled: false
-  
+
   cluster-security:
     podsecuritypolicy:
       create: true
-  
+
   bee-security:
     podsecuritypolicy:
       create: true
