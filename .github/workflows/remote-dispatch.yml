@@ -42,10 +42,10 @@ jobs:
         IFS='.'; read -r -a array <<< "$VERSION"
         CNT=$((${array[1]} + 1))
         sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" charts/bee-web/Chart.yaml
-        
+
         IFS='.'; read -r -a array <<< "$(grep appVersion: charts/bee-web/Chart.yaml | awk -F ': ' '{print $NF}')"
         CNT=$((${array[1]} + 1))
-        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/"charts/bee-web/Chart.yaml
+        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" charts/bee-web/Chart.yaml
 
         git add charts/bee-web/Chart.yaml
         git commit -m "Updated Chart.yml"
