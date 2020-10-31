@@ -25,7 +25,7 @@ spec:
       volumes:    
         - name: config-secret-volume
           secret:
-            secretName: {{ .Release.Name }}-db-secret
+            secretName: {{ .Release.Name }}-config-secret
     {{- if eq .Values.beeApi.database.type "sqlite" }}
         - name: "{{ .Chart.Name }}-volume"
           persistentVolumeClaim:
@@ -39,11 +39,12 @@ spec:
           imagePullPolicy: {{ .Values.beeApi.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 8000
               protocol: TCP
           volumeMounts:
             - name: config-secret-volume
               mountPath: /etc/secret-volume
+              readOnly: true
     {{- if eq .Values.beeApi.database.type "sqlite" }}
             - name: "{{ .Chart.Name }}-volume"
               mountPath: "/data"

@@ -1,54 +1,36 @@
 cluster:
   podsecuritypolicy:
     create: false
-
-postgresql:
-  enabled: true
-  psp.create: true
-  rbac.create: true
+  rbac:
+    create: true
 
 beeApi:
   ReplicaCount: 1
-  
+
   image:
     repository: beeraspberry/bee-api
     version: latest
     pullPolicy: Always
-  
+
   imagePullSecrets: []
-  
-  volumes:
-    - name: bee-api-volume
-      persistentVolumeClaim:
-        claimName: bee-api-claim
-  
-  volumeMounts:
-    - mountPath: "/data"
-      name: bee-api-volume
-  
+
   database:
-    enabled: true
     port: "5432"
     username: beeapi
     password: "test"
     host: "test"
     databaseName: beeapi
     type: postgresql
-  
-  
+
   env:
-    - name: DATABASE_DIR
-      value: "/data"
     - name: DOMAIN_NAME
       value: example.com
     - name: PORT
-      value: 8080
-    - name: SERVICE_NAME
-      value: http://localhost
-  
+      value: 8000
+
   nameOverride: ""
   fullnameOverride: ""
-  
+
   persistence:
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -58,11 +40,11 @@ beeApi:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
-    storageClass: manual
+    storageClass:
     accessMode: ReadWriteOnce
     size: 8Gi
     annotations: {}
-  
+
   serviceAccount:
   # Specifies whether a service account should be created
     create: true
@@ -71,30 +53,26 @@ beeApi:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
     name:
-  
+
   podSecurityContext: {}
   # fsGroup: 2000
-  
-  securityContext: 
+
+  securityContext:
   # capabilities:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
-  
+
   service:
     type: LoadBalancer
     ports:
     - name: http-bee-api
-      port: 80
+      port: 8080
       protocol: TCP
-      targetPort: 80
-    - name: https-bee-api
-      port: 443
-      protocol: TCP
-      targetPort: 443
-  
+      targetPort: 8000
+
   ingress:
     enabled: false
     annotations: {}
@@ -107,7 +85,7 @@ beeApi:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-  
+
   resources:
     limits:
       cpu: 0.5
@@ -115,20 +93,20 @@ beeApi:
     requests:
       cpu: 250m
       memory: 50Mi
-  
+
   nodeSelector: {}
-  
+
   tolerations: []
-  
+
   affinity: {}
-  
+
   frontend:
     enabled: false
-  
+
   cluster-security:
     podsecuritypolicy:
       create: true
-  
+
   bee-security:
     podsecuritypolicy:
       create: true
@@ -136,8 +114,8 @@ beeApi:
 beeUi:
   replicaCount: 1
   image:
-    repository: bee-ui
-    pullPolicy: Never
+    repository: beeraspberry/bee-ui
+    pullPolicy: Always
     version: latest
   imagePullSecrets: []
   nameOverride: ""
@@ -152,7 +130,7 @@ beeUi:
     name:
   podSecurityContext: {}
   # fsGroup: 2000
-  securityContext: 
+  securityContext:
   # capabilities:
   #   drop:
   #   - ALL
@@ -163,9 +141,9 @@ beeUi:
     type: LoadBalancer
     ports:
     - name: http-bee-web
-      port: 80
+      port: 8090
       protocol: TCP
-      targetPort: 8080
+      targetPort: 8000
   ingress:
     enabled: true
     annotations: {}
@@ -192,7 +170,7 @@ beeUi:
     enabled: false
   backend_api:
     host: localhost
-    port: "8080"
+    port: "8000"
   # http or https
     protocol: http
   env:
@@ -200,9 +178,7 @@ beeUi:
       value: "false"
     - name: PRODUCTION
       value: "true"
-    - name: SERVICE_NAME
-      value: http://localhost
     - name: PORT
-      value: "8080"
+      value: "8000"
     - name: DOMAIN_NAME
       value: example.com
