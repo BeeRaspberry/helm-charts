@@ -1,9 +1,14 @@
 apiVersion: v2
 name: bee-web
-description: A Helm chart for building Bee Web
+description: Helm chart for building Bee Web
 
 type: application
 icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
+
+home: https://beeraspberry.github.io/helm-charts/
+maintainers:
+  - name: Peter White
+    email: pwhite6448@gmail.com
 
 version: 1.29.0
 
