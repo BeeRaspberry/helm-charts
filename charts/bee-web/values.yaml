@@ -57,7 +57,7 @@ beeApi:
   podSecurityContext: {}
   # fsGroup: 2000
 
-  securityContext: 
+  securityContext:
   # capabilities:
   #   drop:
   #   - ALL
@@ -130,7 +130,7 @@ beeUi:
     name:
   podSecurityContext: {}
   # fsGroup: 2000
-  securityContext: 
+  securityContext:
   # capabilities:
   #   drop:
   #   - ALL
