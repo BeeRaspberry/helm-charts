@@ -20,16 +20,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       with:
-        fetch-depth: 0
+        fetch-depth: 5
 
     - name: Configure Job
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         echo ::set-env name=VERSION_CHANGE::0
-
-    - name: Fetch history
-      run: git fetch --prune --unshallow
 
     - name: Run chart-testing (lint)
       id: lint
