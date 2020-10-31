@@ -39,7 +39,7 @@ jobs:
           contains(github.event.client_payload.repository, 'beeweb-ui')
       run: |
         CHART='charts/bee-web/Chart.yaml'
-        ls -l charts/bee-web
+        cat $CHART
         VERSION=$(grep 'version:' ${CHART} | head -1 | awk -F ': ' '{print $NF}')
         IFS='.'; read -r -a array <<< "$VERSION"
         CNT=$((${array[1]} + 1))
