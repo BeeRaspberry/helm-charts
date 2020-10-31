@@ -1,14 +1,15 @@
-name: build-master
+# The flow is:
+#  - all branches:
+#      - lint chart
+#      - create kind cluster
+#      - run test install
+#  - master branch: Includes all the steps above
+#      - checks to see if VERSION file was increment, if not increments
+#        and pushes the file to master
+#      - publish helm chart
 
-on: 
-  push:
-    branches:
-      - master
+name: build
 
-# Job builds Helm packages when Chart.yml changes. Check required to keep package process from failing.
-# Package creation only occurs on the 'master' branch.
-
-# Auto-increments version info for each chart if developer forgets.
 jobs:
   build:
 
@@ -43,6 +44,7 @@ jobs:
         command: install
         
     - name: Get repo and owner
+      if: github.ref == 'refs/heads/master'
       uses: jungwinter/split@v1
       id: split
       with:
@@ -50,6 +52,7 @@ jobs:
         seperator: "/"
   
     - name: Check for change in charts/bee-web
+      if: github.ref == 'refs/heads/master'
       id: chart_change
       run: |
         echo "##[set-output name=change;]$(git diff HEAD^ HEAD charts/bee-web | wc -l)"
@@ -57,7 +60,7 @@ jobs:
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
-      if: steps.chart_change.outputs.change > 0
+      if: steps.chart_change.outputs.change > 0 && github.ref == 'refs/heads/master'
       run: |
         IFS='.'; read -r -a array <<< "$(grep version: charts/bee-web/Chart.yaml |\
           head -1 | awk -F ': ' '{print $NF}')"
@@ -72,14 +75,15 @@ jobs:
 
     - name: Push changes to master
       uses: ad-m/github-push-action@master
+      if: github.ref == 'refs/heads/master'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
 
     - name: Publish Bee Web helm packages
+      if: github.ref == 'refs/heads/master'
       uses: helm/chart-releaser-action@master
       with:
-        charts_dir: ${{ github.repository }}
-#        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
+        charts_repo_url: https://${{ github.repository_owner }}.github.io/${{ steps.split.outputs._1 }}/helm-packages
       env:
         CR_TOKEN: ${{ secrets.PAGES_TOKEN }}
