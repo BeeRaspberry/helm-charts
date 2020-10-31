@@ -10,13 +10,13 @@
 
 name: build
 
-on: [push, pull_request]
-#  push:
-#    paths:
-#    - 'charts/**'
-#  pull_request:
-#    paths:
-#    - 'charts/**'
+on:
+  push:
+    paths:
+    - 'charts/**'
+  pull_request:
+    paths:
+    - 'charts/**'
 
 jobs:
   build:
@@ -32,8 +32,6 @@ jobs:
       run: |
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-        echo ::set-env name=VERSION_CHANGE::0
-
 
 #    - name: Run chart-testing (lint)
 #      id: lint
