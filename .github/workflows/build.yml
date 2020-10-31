@@ -10,7 +10,13 @@
 
 name: build
 
-on: [push, pull_request]
+on: [push]
+#  push:
+#    paths:
+#    - 'charts/**'
+#  pull_request:
+#    paths:
+#    - 'charts/**'
 
 jobs:
   build:
@@ -39,12 +45,13 @@ jobs:
     - name: Create kind cluster
       uses: helm/kind-action@v1.0.0-alpha.3
       # Only build a kind cluster if there are chart changes to test.
-      if: steps.lint.outputs.changed == 'true'
+#      if: steps.lint.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
       uses: helm/chart-testing-action@v1.0.0-rc.1
       with:
         command: install
+#      if: steps.lint.outputs.changed == 'true'
         
     - name: Get repo and owner
       if: github.ref == 'refs/heads/master'
@@ -53,13 +60,7 @@ jobs:
       with:
         msg: ${{ github.repository }}
         seperator: "/"
-  
-    - name: Check for change in charts/bee-web
-      if: github.ref == 'refs/heads/master'
-      id: chart_change
-      run: |
-        echo "##[set-output name=change;]$(git diff HEAD^ HEAD charts/bee-web | wc -l)"
-      
+
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
