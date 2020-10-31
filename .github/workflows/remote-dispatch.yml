@@ -38,16 +38,17 @@ jobs:
       if: contains(github.event.client_payload.repository,'bee_api') ||
           contains(github.event.client_payload.repository, 'beeweb-ui')
       run: |
-        VERSION=$(grep 'version:' bee-web/Chart.yaml | head -1 | awk -F ': ' '{print $NF}')
+        CHART='charts/bee-web/Chart.yaml'
+        VERSION=$(grep 'version:' $CHART | head -1 | awk -F ': ' '{print $NF}')
         IFS='.'; read -r -a array <<< "$VERSION"
         CNT=$((${array[1]} + 1))
-        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" bee-web/Chart.yaml
-        sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" bee-web/Chart.yaml
-        IFS='.'; read -r -a array <<< "$(grep appVersion: bee-web/Chart.yaml | awk -F ': ' '{print $NF}')"
+        sed "s/^version: .*/version: ${array[0]}.${CNT}.0/" $CHART
+        sed -i "s/^version: .*/version: ${array[0]}.${CNT}.0/" $CHART
+        IFS='.'; read -r -a array <<< "$(grep appVersion: $CHART | awk -F ': ' '{print $NF}')"
         CNT=$((${array[1]} + 1))
-        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" bee-web/Chart.yaml
+        sed -i "s/^appVersion: .*/appVersion: ${array[0]}.${CNT}.0/" $CHART
 
-        git add bee-web/Chart.yaml
+        git add $CHART
         git commit -m "Updated Chart.yml"
 
         echo "VERSION_CHANGE=1" >> $GITHUB_ENV
