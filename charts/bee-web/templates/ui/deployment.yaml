@@ -30,13 +30,17 @@ spec:
           image: "{{ .Values.beeUi.image.repository }}:{{ .Values.beeApi.image.version }}"
           imagePullPolicy: {{ .Values.beeUi.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-        {{- with .Values.beeUi.env }}
+    {{- range .Values.beeUi.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .targetPort }}
+              protocol: {{ .protocol }}
+    {{- end }}
           env:
+            - name: API_URL
+              value: "http://{{ .Chart.Name }}-api"
+    {{- with .Values.beeUi.env }}
         {{- toYaml . | nindent 12 }}
-      {{- end }}    
+    {{- end }}    
           livenessProbe:
             httpGet:
               path: /

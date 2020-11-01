@@ -33,12 +33,12 @@ jobs:
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-#    - name: Run chart-testing (lint)
-#      id: lint
-#      uses: helm/chart-testing-action@v1.1.0
-#      with:
-#        command: lint
-#        config: .github/ct.yaml
+    - name: Run chart-testing (lint)
+      id: lint
+      uses: helm/chart-testing-action@v1.1.0
+      with:
+        command: lint
+        config: .github/ct.yaml
 
 #    - name: Create kind cluster
 #      uses: helm/kind-action@v1.0.0-alpha.3

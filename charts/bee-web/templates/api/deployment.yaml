@@ -38,9 +38,11 @@ spec:
           image: "{{ .Values.beeApi.image.repository }}:{{ .Values.beeApi.image.version }}"
           imagePullPolicy: {{ .Values.beeApi.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
+      {{- range .Values.beeApi.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .targetPort }}
+              protocol: {{ .protocol }}
+      {{- end }}
           volumeMounts:
             - name: config-secret-volume
               mountPath: /etc/secret-volume
