@@ -40,16 +40,16 @@ jobs:
         command: lint
         config: .github/ct.yaml
 
-#    - name: Create kind cluster
-#      uses: helm/kind-action@v1.0.0-alpha.3
-      # Only build a kind cluster if there are chart changes to test.
-#      if: steps.lint.outputs.changed == 'true'
+    - name: Create kind cluster
+      uses: helm/kind-action@v1.0.0-alpha.3
+     # Only build a kind cluster if there are chart changes to test.
+      if: steps.lint.outputs.changed == 'true'
 
-#    - name: Run chart-testing (install)
-#      uses: helm/chart-testing-action@v1.0.0-rc.1
-#      with:
-#        command: install
-#      if: steps.lint.outputs.changed == 'true'
+    - name: Run chart-testing (install)
+      uses: helm/chart-testing-action@v1.0.0-rc.1
+      with:
+        command: install
+      if: steps.lint.outputs.changed == 'true'
         
     - name: Get repo and owner
       if: github.ref == 'refs/heads/master'
@@ -62,7 +62,7 @@ jobs:
 # Assume since the developer didn't change the version then this is a minor change.
 # Increment by one, and set patch to 0.
     - name: Update version and AppVersion of Chart.yaml
-      if: steps.chart_change.outputs.change > 0 && github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       run: |
         IFS='.'; read -r -a array <<< "$(grep version: charts/bee-web/Chart.yaml |\
           head -1 | awk -F ': ' '{print $NF}')"
