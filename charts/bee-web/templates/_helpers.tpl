@@ -93,7 +93,7 @@ TESTING = False
 # SQLALCHEMY_DATABASE_URI = 'postgresql://test:test123@localhost:5432/testdb'
 {{- with .Values.beeApi.database }}
 {{- if eq .type "sqlite" }}
-{{ printf "SQLALCHEMY_DATABASE_URI = 'sqlite:///%s'\n" .databaseName }}
+{{ printf "SQLALCHEMY_DATABASE_URI = 'sqlite:///data/%s'\n" .databaseName }}
 {{- else }}
 {{ printf "SQLALCHEMY_DATABASE_URI = '%s://%s:%s@%s:%s/%s'\n" .type .username .password .host .port .databaseName }}
 {{- end -}}

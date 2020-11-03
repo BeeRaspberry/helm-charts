@@ -1,0 +1,42 @@
+{{- if .Values.cluster.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+{{- if .Values.cluster.issuer.name }}
+{{- if eq .Values.cluster.issuer.name "acme" }}
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.cluster.issuer.environment }}"
+{{- end }}
+{{- end }}
+spec:
+{{- if .Values.cluster.ingress.name }}
+  tls:
+  - hosts:
+    - "api.{{ .Values.cluster.domainName }}"
+    - {{ .Values.cluster.domainName }}
+    secretName: {{ .Chart.Name }}-ingress-tls
+{{- end}}
+  rules:
+  - host: "api.{{ .Values.cluster.domainName }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Chart.Name }}-api
+{{- with index .Values.beeApi.service.ports 0 }}     
+          servicePort: {{ .port }}
+{{- end }}
+  - host: {{ .Values.cluster.domainName }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Chart.Name }}-ui
+{{- with index .Values.beeApi.service.ports 0 }}     
+          servicePort: {{ .port }}
+{{- end }}
+{{- end }}
