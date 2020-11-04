@@ -3,6 +3,37 @@ cluster:
     create: false
   rbac:
     create: true
+  domainName: example.com
+
+# See https://cert-manager.io/docs/ for more info.
+  issuer:
+  # valid values: acme (Let's Encrypt), self (self-signed)
+    name:
+  # valid values: staging, production
+    environment: staging
+    email: admin@example.com
+    solvers:
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: $PROJECT_ID
+          # This is the secret used to access the service account
+          serviceAccountSecretRef:
+            name: clouddns-dns01-solver-svc-acct
+            key: key.json
+
+  ingress:
+    enabled: true
+    annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: map-example.local
+        paths: []
+    tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 beeApi:
   ReplicaCount: 1
@@ -16,17 +47,11 @@ beeApi:
 
   database:
     port: "5432"
-    username: beeapi
-    password: "test"
-    host: "test"
-    databaseName: beeapi
+    username: test
+    password: test123
+    host: localhost
+    databaseName: testdb
     type: postgresql
-
-  env:
-    - name: DOMAIN_NAME
-      value: example.com
-    - name: PORT
-      value: 8000
 
   nameOverride: ""
   fullnameOverride: ""
@@ -72,19 +97,6 @@ beeApi:
       port: 80
       protocol: TCP
       targetPort: 8000
-
-  ingress:
-    enabled: false
-    annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: map-example.local
-        paths: []
-    tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
   resources:
     limits:
@@ -143,19 +155,8 @@ beeUi:
     - name: http-bee-web
       port: 80
       protocol: TCP
-      targetPort: 8000
-  ingress:
-    enabled: true
-    annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: map-example.local
-        paths: []
-    tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+      targetPort: 80
+
   resources:
     limits:
       cpu: 0.5
@@ -166,10 +167,3 @@ beeUi:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  env:
-    - name: DEBUG
-      value: "false"
-    - name: ENVIRONMENT
-      value: production
-    - name: DOMAIN_NAME
-      value: example.com

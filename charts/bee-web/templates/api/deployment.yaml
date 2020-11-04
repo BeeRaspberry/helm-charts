@@ -54,56 +54,16 @@ spec:
           env:
           - name: CONFIG_FILE
             value: /etc/secret-volume/config.cfg
-    {{- if eq .Values.beeApi.database.type "sqlite" }}
-           {{- toYaml . | nindent 12 }}
-    {{- else }}
-          - name: DATABASE_TYPE
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: type
-    {{- if .Values.beeApi.database.host }}
-          - name: DATABASE_HOST
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: host
-    {{- end }}
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: databaseName
-    {{- if .Values.beeApi.database.username }}
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: username
-    {{- end }}
-    {{- if .Values.beeApi.database.port }}
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: port
-    {{- end }}
-    {{- if .Values.beeApi.database.password }}
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-db-secret
-                key: password
-    {{- end }}      
-    {{- end }}      
+    {{- with index .Values.beeApi.service.ports 0 }}     
           livenessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: {{ .targetPort }}
           readinessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: {{ .targetPort }}
+    {{- end }}
           resources:
             {{- toYaml .Values.beeApi.resources | nindent 12 }}
       {{- with .Values.beeApi.nodeSelector }}
