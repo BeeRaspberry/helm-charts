@@ -33,24 +33,29 @@ jobs:
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.0.1
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed)
+        if [[ -n "$changed" ]]; then
+          echo "::set-output name=changed::true"
+        fi
+
     - name: Run chart-testing (lint)
-      id: lint
-      uses: helm/chart-testing-action@v1.1.0
-      with:
-        command: lint
+      run: ct lint
         config: .github/ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.0.0-alpha.3
+      uses: helm/kind-action@v1.0.0
      # Only build a kind cluster if there are chart changes to test.
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
-      uses: helm/chart-testing-action@v1.1.0
-      with:
-        command: install
-      if: steps.lint.outputs.changed == 'true'
-        
+      run: ct install
+
     - name: Get repo and owner
       if: github.ref == 'refs/heads/master'
       uses: jungwinter/split@v1
