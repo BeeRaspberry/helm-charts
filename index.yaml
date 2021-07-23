@@ -2,10 +2,10 @@ apiVersion: v1
 entries:
   bee-web:
   - apiVersion: v2
-    appVersion: 1.45.0
-    created: "2021-07-21T21:07:58.200781955Z"
+    appVersion: 1.46.0
+    created: "2021-07-23T15:21:57.585625924Z"
     description: Helm chart for building Bee Web
-    digest: b98f37daca72feb3df09e04289c37aadab88e768267faa11fe0425e4931d7869
+    digest: 57f824936b931a873dc02bab05cabe10eaeebc0d9b3bcfc9e9908af41e32dac4
     home: https://beeraspberry.github.io/helm-charts/
     icon: https://github.com/BeeRaspberry/assets/blob/master/images/beewhitecrosshatch.icon
     maintainers:
@@ -14,6 +14,6 @@ entries:
     name: bee-web
     type: application
     urls:
-    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-web-1.41.0/bee-web-1.41.0.tgz
-    version: 1.41.0
-generated: "2021-07-21T21:07:57.996359573Z"
+    - https://github.com/BeeRaspberry/helm-charts/releases/download/bee-web-1.42.0/bee-web-1.42.0.tgz
+    version: 1.42.0
+generated: "2021-07-23T15:21:57.391100067Z"
