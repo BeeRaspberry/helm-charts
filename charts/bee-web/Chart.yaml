@@ -10,6 +10,6 @@ maintainers:
   - name: erikdeirdre
     email: pwhite@delpwhite.org
 
-version: 1.32.0
+version: 1.42.0
 
-appVersion: 1.36.0
+appVersion: 1.46.0
